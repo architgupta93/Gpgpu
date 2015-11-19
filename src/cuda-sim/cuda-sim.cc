@@ -1230,6 +1230,14 @@ void ptx_thread_info::ptx_exec_inst( warp_inst_t &inst, unsigned lane_id)
    
    if( skip ) {
       inst.set_not_active(lane_id);
+      // Control flow analysis: This part of the program indicates that the instruction is active,
+      // but it is not being executed because it has been predicated. So, if the instruction haapens
+      // to be a branch instruction, the branch is not taken
+      //
+      // Code here to check if the opcode is BRA_OP and to increment the "instances" field in the
+      // tagged branch target buffer for the corresponding branch instruction. Copy some of the 
+      // content from "instruction.cc" which tells you how to get the source and target PC values 
+      // for the branch instruction
    } else {
       const ptx_instruction *pI_saved = pI;
       ptx_instruction *pJ = NULL;
