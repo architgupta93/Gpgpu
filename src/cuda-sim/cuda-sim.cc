@@ -28,6 +28,7 @@
 
 #include "cuda-sim.h"
 
+#include "../cf_utils.h"
 #include "instructions.h"
 #include "ptx_ir.h"
 #include "ptx.tab.h"
@@ -1233,7 +1234,15 @@ void ptx_thread_info::ptx_exec_inst( warp_inst_t &inst, unsigned lane_id)
       // Control flow analysis: This part of the program indicates that the instruction is active,
       // but it is not being executed because it has been predicated. So, if the instruction haapens
       // to be a branch instruction, the branch is not taken
-      //
+
+      if(pI->get_opcode() == BRA_OP)
+      {
+            const operand_info &target  = pI->dst();
+            address_type target_pc = (address_type) this->get_operand_value(target, target, U32_TYPE, this, 1);
+            shader_core_ctx* t_core = (shader_core_ctx*) get_core();
+            t_core->update_btb(inst.pc, target_pc, NOT_TAKEN);
+      }
+
       // Code here to check if the opcode is BRA_OP and to increment the "instances" field in the
       // tagged branch target buffer for the corresponding branch instruction. Copy some of the 
       // content from "instruction.cc" which tells you how to get the source and target PC values 
@@ -1246,6 +1255,16 @@ void ptx_thread_info::ptx_exec_inst( warp_inst_t &inst, unsigned lane_id)
          *((warp_inst_t*)pJ) = inst; // copy active mask information
          pI = pJ;
       }
+
+      // Update the Branch target buffers when the branch is taken (controlled by the predicate bit)
+      if(pI->get_opcode() == BRA_OP)
+      {
+            const operand_info &target  = pI->dst();
+            address_type target_pc = (address_type) this->get_operand_value(target, target, U32_TYPE, this, 1);
+            shader_core_ctx* t_core = (shader_core_ctx*) get_core();
+            t_core->update_btb(inst.pc, target_pc, TAKEN);
+      }
+
       switch ( pI->get_opcode() ) {
 #define OP_DEF(OP,FUNC,STR,DST,CLASSIFICATION) case OP: FUNC(pI,this); op_classification = CLASSIFICATION; break;
 #include "opcodes.def"

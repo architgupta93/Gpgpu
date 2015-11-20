@@ -28,6 +28,8 @@
 
 
 #include "abstract_hardware_model.h"
+
+#include "cf_utils.h"
 #include "cuda-sim/memory.h"
 #include "cuda-sim/ptx_ir.h"
 #include "cuda-sim/ptx-stats.h"

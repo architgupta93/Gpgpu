@@ -28,6 +28,8 @@
 
 #include <float.h>
 #include "shader.h"
+
+#include "../cf_utils.h"
 #include "gpu-sim.h"
 #include "addrdec.h"
 #include "dram.h"
@@ -53,6 +55,18 @@
     
 
 /////////////////////////////////////////////////////////////////////////////
+
+// Describing Control flow related functions
+void shader_core_ctx::update_btb(address_type& _src, address_type& _targ, bool direction)
+{
+	tagged_branch_target_buffer_entry* match = m_shader_core_btb->find_btb_entry(
+	_src, _targ);
+	// Doing this here (and not in the BTB itself) gives you access to the
+	// shader_core_ctx class. If this has to be used in the future to make
+	// branch predictions etc, this should provide a nice handle to use the
+	// btb inside the shader_core_ctx class
+	match->update_branch(direction); 
+}
 
 std::list<unsigned> shader_core_ctx::get_regs_written( const inst_t &fvt ) const
 {

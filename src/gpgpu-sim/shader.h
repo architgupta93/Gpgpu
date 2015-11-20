@@ -29,6 +29,8 @@
 #ifndef SHADER_H
 #define SHADER_H
 
+#include "../cf_utils.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
@@ -1605,8 +1607,8 @@ public:
     void get_pdom_stack_top_info( unsigned tid, unsigned *pc, unsigned *rpc ) const;
 
 // used for control flow analysis (branch target buffers)
-    // initialization
-    tagged_branch_target_buffer* m_shader_core_btb;
+    void update_btb(address_type& _src, address_type& _targ, bool direction);
+    tagged_branch_target_buffer* get_btb() { return m_shader_core_btb; }
     
 // used by pipeline timing model components:
     // modifiers
@@ -1741,6 +1743,9 @@ public:
 	 bool check_if_non_released_reduction_barrier(warp_inst_t &inst);
 
 	private:
+	// used for control flow analysis (branch target buffers)
+	// initialization
+	 tagged_branch_target_buffer* m_shader_core_btb;
 	 unsigned inactive_lanes_accesses_sfu(unsigned active_count,double latency){
       return  ( ((32-active_count)>>1)*latency) + ( ((32-active_count)>>3)*latency) + ( ((32-active_count)>>3)*latency);
 	 }
