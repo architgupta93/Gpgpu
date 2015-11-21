@@ -1,4 +1,5 @@
 #include "cf_utils.h"
+#include <stdio.h>
 
 // Declaring functions for a BTB entry
 
@@ -34,10 +35,10 @@ const& btb_entry) const
 };
 
 
-double tagged_branch_target_buffer_entry::get_occupancy() const
+float tagged_branch_target_buffer_entry::get_occupancy() const
 {
 	int occupied = 0;
-	int total_count = 0;
+	int total_count = occupancy[0];
 	for(int i=1;i<WARP_SIZE+1;i++){
 		occupied = i*occupancy[i];
 		total_count += occupancy[i];
@@ -45,7 +46,7 @@ double tagged_branch_target_buffer_entry::get_occupancy() const
 	return (((float) occupied)/((float) total_count*WARP_SIZE));
 }
 
-double tagged_branch_target_buffer_entry::get_taken_fraction() const
+float tagged_branch_target_buffer_entry::get_taken_fraction() const
 {
 	return (((float) taken_count)/((float) instances));
 }
@@ -59,6 +60,21 @@ void tagged_branch_target_buffer_entry::update_branch(bool& direction)
 void tagged_branch_target_buffer_entry::update_occupancy(int& warp_occ)
 {
 	occupancy[warp_occ]++;
+}
+
+void tagged_branch_target_buffer_entry::merge(const tagged_branch_target_buffer_entry* _entry)
+{
+	instances += _entry->get_instances();
+	taken_count += _entry->get_taken_count();
+	for (int i=0;i<WARP_SIZE+1; i++)
+	{
+		occupancy[i]+=_entry->occupancy[i];
+	}
+}
+
+void tagged_branch_target_buffer_entry::print()
+{
+	printf("0x%12x 0x%12x %20u %6f %6f\n", source, target, instances, get_taken_fraction(), get_occupancy());				
 }
 
 // Function declarations for a BTB
@@ -75,7 +91,7 @@ tagged_branch_target_buffer::tagged_branch_target_buffer()
 }
 
 tagged_branch_target_buffer_entry* tagged_branch_target_buffer::find_btb_entry(
-address_type& _src, address_type& _targ)
+const address_type& _src, const address_type& _targ)
 {
 	std::vector<tagged_branch_target_buffer_entry*>:: iterator it;
 	it = std::find_if(btb.begin(), btb.end(), match_btb_entry(_src,_targ));
@@ -88,3 +104,24 @@ address_type& _src, address_type& _targ)
 	return btb.back();	
 }
 
+void tagged_branch_target_buffer::print()
+{
+	printf("%12s %12s %20s %6s %6s\n", "SOURCE", "TARGET", "INSTANCES", "TAKEN", "OCC");
+	std::vector<tagged_branch_target_buffer_entry*>:: iterator it;
+	for (it=btb.begin(); it != btb.end(); it++)
+	{
+		(*it)->print();
+	}
+	return;
+}
+
+void tagged_branch_target_buffer::merge_btb(const tagged_branch_target_buffer* child_btb)
+{
+	tagged_branch_target_buffer_entry* match;
+	std::vector<tagged_branch_target_buffer_entry*>:: const_iterator it;
+	for (it=child_btb->btb.begin();it!=child_btb->btb.end();++it)
+	{
+		match = find_btb_entry((*it)->get_source(),(*it)->get_target());
+		match->merge(*it);
+	}
+}

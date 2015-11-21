@@ -147,6 +147,7 @@ enum _memory_op_t {
 	memory_store
 };
 
+#include "cf_utils.h" 
 #include <bitset>
 #include <list>
 #include <vector>
@@ -232,9 +233,18 @@ public:
    std::list<class ptx_thread_info *> &active_threads() { return m_active_threads; }
    class memory_space *get_param_memory() { return m_param_mem; }
 
+   // Control flow analysis related procedures
+   void merge_btb(const tagged_branch_target_buffer* child_btb)
+   {
+	m_kernel_btb->merge_btb(child_btb);
+   }
+   void print_btb() { m_kernel_btb->print(); }
 private:
    kernel_info_t( const kernel_info_t & ); // disable copy constructor
    void operator=( const kernel_info_t & ); // disable copy operator
+
+   // Control flow analysis related members
+   tagged_branch_target_buffer* m_kernel_btb;   
 
    class function_info *m_kernel_entry;
 

@@ -1608,7 +1608,7 @@ public:
 
 // used for control flow analysis (branch target buffers)
     void update_btb(address_type& _src, address_type& _targ, bool direction);
-    tagged_branch_target_buffer* get_btb() { return m_shader_core_btb; }
+    void print_btb(){ m_shader_core_btb->print(); }
     
 // used by pipeline timing model components:
     // modifiers

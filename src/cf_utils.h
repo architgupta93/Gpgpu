@@ -32,12 +32,16 @@ public:
 	address_type get_target() const{return target;}
 	int get_taken_count() const{return taken_count;}
 	int get_instances() const{return instances;}
-	double get_taken_fraction() const;
-	double get_occupancy() const;
+	float get_taken_fraction() const;
+	float get_occupancy() const;
 
 	// Modifying the current state of the BTB entry
 	void update_branch(bool& direction);
 	void update_occupancy(int& warp_occ);
+	void merge(tagged_branch_target_buffer_entry const* _entry);
+					// Add the instances, taken count etc
+					// of another BTB entry to this entry
+	void print();
 private:
 	bool tag;			// Indicates whether the branch is
 					// intrinsic or extrinsic
@@ -53,7 +57,7 @@ private:
 struct match_btb_entry{
 	address_type source;
 	address_type target;
-	match_btb_entry(address_type _src, address_type _targ) : source(_src), target(_targ) {}
+	match_btb_entry(const address_type& _src, const address_type& _targ) : source(_src), target(_targ) {}
 	bool operator()(tagged_branch_target_buffer_entry* const& btb_entry) const;
 };
 
@@ -64,7 +68,9 @@ private:
 
 public:
 	tagged_branch_target_buffer();
-	tagged_branch_target_buffer_entry* find_btb_entry(address_type& _src,
-	address_type& _targ);
+	tagged_branch_target_buffer_entry* find_btb_entry(const address_type& _src,
+	const address_type& _targ);
+	void merge_btb(const tagged_branch_target_buffer* child_btb);
+	void print();
 };
 #endif // end #ifndef CF_UTILS_INCLUDED

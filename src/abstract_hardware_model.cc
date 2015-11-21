@@ -567,6 +567,7 @@ kernel_info_t::kernel_info_t( dim3 gridDim, dim3 blockDim, class function_info *
     m_num_cores_running=0;
     m_uid = m_next_uid++;
     m_param_mem = new memory_space_impl<8192>("param",64*1024);
+    m_kernel_btb = new tagged_branch_target_buffer();	
 }
 
 kernel_info_t::~kernel_info_t()
@@ -790,7 +791,9 @@ void core_t::execute_warp_inst_t(warp_inst_t &inst, unsigned warpId)
 {
     // Control flow analysis...
     // This is where the execution of each warp instruction takes place
-    // Use inst.active_count() to get the warp occupancy
+    // Use inst.active_count() to get the warp occupancy where this
+    // function is called in the shader_core_ctx class
+    // in shader_core_ctx::func_exec_inst
     for ( unsigned t=0; t < m_warp_size; t++ ) {
         if( inst.active(t) ) {
             if(warpId==(unsigned (-1)))

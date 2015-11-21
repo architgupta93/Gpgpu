@@ -35,6 +35,7 @@
 #include "dram.h"
 #include "stat-tool.h"
 #include "gpu-misc.h"
+#include "../cuda-sim/ptx_ir.h"
 #include "../cuda-sim/ptx_sim.h"
 #include "../cuda-sim/ptx-stats.h"
 #include "../cuda-sim/cuda-sim.h"
@@ -686,8 +687,35 @@ void shader_core_ctx::fetch()
 
 void shader_core_ctx::func_exec_inst( warp_inst_t &inst )
 {
-    execute_warp_inst_t(inst);
-    if( inst.is_load() || inst.is_store() )
+    // We need to figure out if the warp instruction is a branch instruction
+    // before it is executed using execute_warp_inst_t(inst), otherwise, the
+    // PC value will get incremented and it will be diffficult to trace back
+    // the original instruction
+    unsigned t0_tid = m_warp_size*(inst.warp_id());
+    ptx_thread_info* t0 = m_thread[t0_tid];
+    const ptx_instruction *pI = (t0->func_info())->get_instruction(inst.pc);
+    warp_inst_t prev_inst = inst;
+    address_type target_pc;
+    if (pI->get_opcode()==BRA_OP)
+    {
+            const operand_info &target  = pI->dst();
+            target_pc = (address_type) t0->get_operand_value(target, target, (unsigned) 304, t0, 1);
+				// 304 is not a magical number. It comes from the file
+				// ptx.tab.c in gpgpu/cuobjdump_to_ptxplus
+				// U32_TYPE = 304
+    }
+
+    execute_warp_inst_t(inst);	// Original code
+
+    // Now that all the instructions in this warp have been executed, we can
+    // update the occupancy table in the shader_core's BTB
+    if (pI->get_opcode()==BRA_OP)
+    {
+    	tagged_branch_target_buffer_entry* match=m_shader_core_btb->find_btb_entry((address_type) prev_inst.pc, target_pc);
+	int occ = inst.active_count();
+	match->update_occupancy(occ);
+    }
+    if( inst.is_load() || inst.is_store() )	// Original code
         inst.generate_mem_accesses();
 }
 
@@ -1941,10 +1969,13 @@ void shader_core_ctx::register_cta_thread_exit( unsigned cta_num )
           m_kernel->dec_running();
           printf("GPGPU-Sim uArch: Shader %u empty (release kernel %u \'%s\').\n", m_sid, m_kernel->get_uid(),
                  m_kernel->name().c_str() );
+	  print_btb();
+	  m_kernel->merge_btb(m_shader_core_btb);
           if( m_kernel->no_more_ctas_to_run() ) {
               if( !m_kernel->running() ) {
                   printf("GPGPU-Sim uArch: GPU detected kernel \'%s\' finished on shader %u.\n", m_kernel->name().c_str(), m_sid );
                   m_gpu->set_kernel_done( m_kernel );
+		  m_kernel->print_btb();
               }
           }
           m_kernel=NULL;
