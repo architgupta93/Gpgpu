@@ -40,7 +40,7 @@ float tagged_branch_target_buffer_entry::get_occupancy() const
 	int occupied = 0;
 	int total_count = occupancy[0];
 	for(int i=1;i<WARP_SIZE+1;i++){
-		occupied = i*occupancy[i];
+		occupied += i*occupancy[i];
 		total_count += occupancy[i];
 	}
 	return (((float) occupied)/((float) total_count*WARP_SIZE));
@@ -74,7 +74,12 @@ void tagged_branch_target_buffer_entry::merge(const tagged_branch_target_buffer_
 
 void tagged_branch_target_buffer_entry::print()
 {
-	printf("0x%12x 0x%12x %20u %6f %6f\n", source, target, instances, get_taken_fraction(), get_occupancy());				
+	printf("%12x %12x %20u %6f %6f\n", source, target, instances, get_taken_fraction(), get_occupancy());				
+//	for (int i=0; i<WARP_SIZE+1;i++)
+//	{
+//		printf("W%d: %d, ", i, occupancy[i]);
+//	}
+//	printf("\n");
 }
 
 // Function declarations for a BTB
@@ -124,4 +129,9 @@ void tagged_branch_target_buffer::merge_btb(const tagged_branch_target_buffer* c
 		match = find_btb_entry((*it)->get_source(),(*it)->get_target());
 		match->merge(*it);
 	}
+}
+
+void tagged_branch_target_buffer::flush()
+{
+	btb.clear();	
 }

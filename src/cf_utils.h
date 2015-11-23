@@ -72,5 +72,6 @@ public:
 	const address_type& _targ);
 	void merge_btb(const tagged_branch_target_buffer* child_btb);
 	void print();
+	void flush();
 };
 #endif // end #ifndef CF_UTILS_INCLUDED

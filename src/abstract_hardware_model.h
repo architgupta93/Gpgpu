@@ -239,6 +239,7 @@ public:
 	m_kernel_btb->merge_btb(child_btb);
    }
    void print_btb() { m_kernel_btb->print(); }
+   void flush_btb() { m_kernel_btb->flush(); }
 private:
    kernel_info_t( const kernel_info_t & ); // disable copy constructor
    void operator=( const kernel_info_t & ); // disable copy operator
