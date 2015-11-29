@@ -1023,6 +1023,12 @@ public:
       return false;
    }
 
+	//SOHUM: Added accessor function to access the private m_bt_type
+	bool is_extrinsic(){
+		assert(m_opcode == BRA_OP);
+		assert(m_br_type != NOT_BR);
+		return m_br_type == EXTRN;
+	}
 
 private:
    void set_opcode_and_latency();

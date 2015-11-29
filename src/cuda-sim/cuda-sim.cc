@@ -1244,7 +1244,8 @@ void ptx_thread_info::ptx_exec_inst( warp_inst_t &inst, unsigned lane_id)
             const operand_info &target  = pI->dst();
             address_type target_pc = (address_type) this->get_operand_value(target, target, U32_TYPE, this, 1);
             shader_core_ctx* t_core = (shader_core_ctx*) get_core();
-            t_core->update_btb(inst.pc, target_pc, NOT_TAKEN);
+			bool t = inst.is_branch_and_extrinsic();	//TODO: Sohum: Confirm that the tag has to be loaded from inst_t
+            t_core->update_btb(t, inst.pc, target_pc, NOT_TAKEN);
       }
 
       // Code here to check if the opcode is BRA_OP and to increment the "instances" field in the
@@ -1266,7 +1267,8 @@ void ptx_thread_info::ptx_exec_inst( warp_inst_t &inst, unsigned lane_id)
             const operand_info &target  = pI->dst();
             address_type target_pc = (address_type) this->get_operand_value(target, target, U32_TYPE, this, 1);
             shader_core_ctx* t_core = (shader_core_ctx*) get_core();
-            t_core->update_btb(inst.pc, target_pc, TAKEN);
+			bool t = inst.is_branch_and_extrinsic();	//TODO: Sohum: Confirm that the tag has to be loaded from inst_t
+            t_core->update_btb(t, inst.pc, target_pc, TAKEN);
       }
 
       switch ( pI->get_opcode() ) {

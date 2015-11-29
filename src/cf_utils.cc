@@ -100,7 +100,7 @@ tagged_branch_target_buffer::tagged_branch_target_buffer()
 }
 
 tagged_branch_target_buffer_entry* tagged_branch_target_buffer::find_btb_entry(
-const bool& _tag, const address_type& _src, const address_type& _targ)	//SOHUM: added tag info here, TODO
+const bool& _tag, const address_type& _src, const address_type& _targ)	//SOHUM: added tag info here
 {
 	std::vector<tagged_branch_target_buffer_entry*>:: iterator it;
 	it = std::find_if(btb.begin(), btb.end(), match_btb_entry(_src,_targ));
@@ -130,8 +130,7 @@ void tagged_branch_target_buffer::merge_btb(const tagged_branch_target_buffer* c
 	std::vector<tagged_branch_target_buffer_entry*>:: const_iterator it;
 	for (it=child_btb->btb.begin();it!=child_btb->btb.end();++it)
 	{
-		//TODO: SOHUM: false addes as dummy argument
-		match = find_btb_entry(false,(*it)->get_source(),(*it)->get_target());
+		match = find_btb_entry((*it)->getTag(),(*it)->get_source(),(*it)->get_target());
 		match->merge(*it);
 	}
 }

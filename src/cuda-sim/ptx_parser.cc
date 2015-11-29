@@ -280,7 +280,7 @@ void add_instruction()
 		branch_labels.pop();	//pop this entry
 	}
    ptx_instruction *i = new ptx_instruction( g_opcode,
-											typ,			//TODO:SOHUM:add code here to add the nature of the branch 
+											typ,			//SOHUM:add code here to add the nature of the branch 
                                              g_pred, 
                                              g_neg_pred,
                                              g_pred_mod, 

@@ -58,12 +58,10 @@
 /////////////////////////////////////////////////////////////////////////////
 
 // Describing Control flow related functions
-void shader_core_ctx::update_btb(address_type& _src, address_type& _targ, bool direction)
+void shader_core_ctx::update_btb(bool& _tag, address_type& _src, address_type& _targ, bool direction)
 {
 	tagged_branch_target_buffer_entry* match = m_shader_core_btb->find_btb_entry(
-	false,_src, _targ);
-	//TODO: Sohum: the 'false' argument above was added adhoc
-	//need to solve this
+	_tag,_src, _targ);
 
 	// Doing this here (and not in the BTB itself) gives you access to the
 	// shader_core_ctx class. If this has to be used in the future to make

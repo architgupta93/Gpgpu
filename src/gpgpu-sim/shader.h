@@ -1607,7 +1607,7 @@ public:
     void get_pdom_stack_top_info( unsigned tid, unsigned *pc, unsigned *rpc ) const;
 
 // used for control flow analysis (branch target buffers)
-    void update_btb(address_type& _src, address_type& _targ, bool direction);
+    void update_btb(bool& _tag, address_type& _src, address_type& _targ, bool direction);
     void print_btb(){ m_shader_core_btb->print(); }
     
 // used by pipeline timing model components:
