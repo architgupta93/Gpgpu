@@ -1971,15 +1971,20 @@ void shader_core_ctx::register_cta_thread_exit( unsigned cta_num )
           m_kernel->dec_running();
           printf("GPGPU-Sim uArch: Shader %u empty (release kernel %u \'%s\').\n", m_sid, m_kernel->get_uid(),
                  m_kernel->name().c_str() );
+          printf("\n\nBRANCH_STATS_PRINT: For Shader_id=%u, Kernel(uid=%u, name: \'%s\').\n", m_sid, m_kernel->get_uid(),
+                 m_kernel->name().c_str() );
 	  print_btb();
+			printf("\n\n");
 	  m_kernel->merge_btb(m_shader_core_btb);
 	  m_shader_core_btb->flush();
           if( m_kernel->no_more_ctas_to_run() ) {
               if( !m_kernel->running() ) {
                   printf("GPGPU-Sim uArch: GPU detected kernel \'%s\' finished on shader %u.\n", m_kernel->name().c_str(), m_sid );
                   m_gpu->set_kernel_done( m_kernel );
-		  printf("Printing BTB for Kernel ID: %d\n", m_kernel->get_uid());
+          printf("\n\nBRANCH_STATS_PRINT: For Kernel(uid=%u, name: \'%s\').\n", m_kernel->get_uid(),
+                 m_kernel->name().c_str() );
 		  m_kernel->print_btb();
+			printf("\n\n");
 		  m_kernel->flush_btb();
               }
           }

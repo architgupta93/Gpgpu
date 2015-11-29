@@ -120,7 +120,7 @@ const bool& _tag, const address_type& _src, const address_type& _targ)	//SOHUM: 
 
 void tagged_branch_target_buffer::print()
 {
-	printf("\n\n----------------------------------------------------------------------------------------\n");
+	printf("----------------------------------------------------------------------------------------\n");
 	printf("%12s %12s %12s %10s %12s %15s\n", "PC", "TYPE", "TARGET", "INSTANCES", "TAKEN", "OCCUPANCY");
 	printf("----------------------------------------------------------------------------------------\n");
 	std::vector<tagged_branch_target_buffer_entry*>:: iterator it;
