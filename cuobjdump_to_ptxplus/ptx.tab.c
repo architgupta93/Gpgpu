@@ -1,8 +1,8 @@
-/* A Bison parser, made by GNU Bison 3.0.4.  */
+/* A Bison parser, made by GNU Bison 3.0.2.  */
 
 /* Bison implementation for Yacc-like parsers in C
 
-   Copyright (C) 1984, 1989-1990, 2000-2015 Free Software Foundation, Inc.
+   Copyright (C) 1984, 1989-1990, 2000-2013 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -44,7 +44,7 @@
 #define YYBISON 1
 
 /* Bison version.  */
-#define YYBISON_VERSION "3.0.4"
+#define YYBISON_VERSION "3.0.2"
 
 /* Skeleton name.  */
 #define YYSKELETON_NAME "yacc.c"
@@ -267,7 +267,7 @@ extern int ptx_debug;
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
-
+typedef union YYSTYPE YYSTYPE;
 union YYSTYPE
 {
 #line 30 "../src/cuda-sim/ptx.y" /* yacc.c:355  */
@@ -280,8 +280,6 @@ union YYSTYPE
 
 #line 282 "ptx.tab.c" /* yacc.c:355  */
 };
-
-typedef union YYSTYPE YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define YYSTYPE_IS_DECLARED 1
 #endif
@@ -305,7 +303,7 @@ int ptx_parse (void);
 	int ptx_lex(void);
 	int ptx_error(const char *);
 
-#line 309 "ptx.tab.c" /* yacc.c:358  */
+#line 307 "ptx.tab.c" /* yacc.c:358  */
 
 #ifdef short
 # undef short
@@ -1770,31 +1768,31 @@ yyreduce:
         case 6:
 #line 217 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { set_symtab((yyvsp[0].ptr_value)); func_header(".skip"); }
-#line 1774 "ptx.tab.c" /* yacc.c:1646  */
+#line 1772 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 7:
 #line 217 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { end_function(); }
-#line 1780 "ptx.tab.c" /* yacc.c:1646  */
+#line 1778 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 8:
 #line 218 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { set_symtab((yyvsp[0].ptr_value)); }
-#line 1786 "ptx.tab.c" /* yacc.c:1646  */
+#line 1784 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 9:
 #line 218 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { func_header(".skip"); }
-#line 1792 "ptx.tab.c" /* yacc.c:1646  */
+#line 1790 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 10:
 #line 218 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { end_function(); }
-#line 1798 "ptx.tab.c" /* yacc.c:1646  */
+#line 1796 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 11:
@@ -1802,277 +1800,277 @@ yyreduce:
     {func_header_info_int(".maxntid", (yyvsp[-4].int_value));
 										func_header_info_int(",", (yyvsp[-2].int_value));
 										func_header_info_int(",", (yyvsp[0].int_value)); }
-#line 1806 "ptx.tab.c" /* yacc.c:1646  */
+#line 1804 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 12:
 #line 224 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { func_header_info_int(".minnctapersm", (yyvsp[0].int_value)); printf("GPGPU-Sim: Warning: .minnctapersm ignored. \n"); }
-#line 1812 "ptx.tab.c" /* yacc.c:1646  */
+#line 1810 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 13:
 #line 225 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { func_header_info_int(".maxnctapersm", (yyvsp[0].int_value)); printf("GPGPU-Sim: Warning: .maxnctapersm ignored. \n"); }
-#line 1818 "ptx.tab.c" /* yacc.c:1646  */
+#line 1816 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 16:
 #line 232 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { start_function((yyvsp[-1].int_value)); func_header_info("(");}
-#line 1824 "ptx.tab.c" /* yacc.c:1646  */
+#line 1822 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 17:
 #line 232 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     {func_header_info(")");}
-#line 1830 "ptx.tab.c" /* yacc.c:1646  */
+#line 1828 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 18:
 #line 232 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { (yyval.ptr_value) = reset_symtab(); }
-#line 1836 "ptx.tab.c" /* yacc.c:1646  */
+#line 1834 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 19:
 #line 233 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { start_function((yyvsp[0].int_value)); }
-#line 1842 "ptx.tab.c" /* yacc.c:1646  */
+#line 1840 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 20:
 #line 233 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { (yyval.ptr_value) = reset_symtab(); }
-#line 1848 "ptx.tab.c" /* yacc.c:1646  */
+#line 1846 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 21:
 #line 234 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { start_function((yyvsp[0].int_value)); add_function_name(""); g_func_decl=0; (yyval.ptr_value) = reset_symtab(); }
-#line 1854 "ptx.tab.c" /* yacc.c:1646  */
+#line 1852 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 22:
 #line 237 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_function_name((yyvsp[0].string_value)); }
-#line 1860 "ptx.tab.c" /* yacc.c:1646  */
+#line 1858 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 23:
 #line 237 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     {func_header_info("(");}
-#line 1866 "ptx.tab.c" /* yacc.c:1646  */
+#line 1864 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 24:
 #line 237 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { g_func_decl=0; func_header_info(")"); }
-#line 1872 "ptx.tab.c" /* yacc.c:1646  */
+#line 1870 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 25:
 #line 238 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_function_name((yyvsp[0].string_value)); g_func_decl=0; }
-#line 1878 "ptx.tab.c" /* yacc.c:1646  */
+#line 1876 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 26:
 #line 241 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { (yyval.int_value) = 1; g_func_decl=1; func_header(".entry"); }
-#line 1884 "ptx.tab.c" /* yacc.c:1646  */
+#line 1882 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 27:
 #line 242 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { (yyval.int_value) = 0; g_func_decl=1; func_header(".func"); }
-#line 1890 "ptx.tab.c" /* yacc.c:1646  */
+#line 1888 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 28:
 #line 243 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { (yyval.int_value) = 0; g_func_decl=1; func_header(".func"); }
-#line 1896 "ptx.tab.c" /* yacc.c:1646  */
+#line 1894 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 29:
 #line 244 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { (yyval.int_value) = 2; g_func_decl=1; func_header(".func"); }
-#line 1902 "ptx.tab.c" /* yacc.c:1646  */
+#line 1900 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 31:
 #line 248 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_directive(); }
-#line 1908 "ptx.tab.c" /* yacc.c:1646  */
+#line 1906 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 32:
 #line 249 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     {func_header_info(",");}
-#line 1914 "ptx.tab.c" /* yacc.c:1646  */
+#line 1912 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 33:
 #line 249 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_directive(); }
-#line 1920 "ptx.tab.c" /* yacc.c:1646  */
+#line 1918 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 34:
 #line 251 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_space_spec(param_space_unclassified,0); }
-#line 1926 "ptx.tab.c" /* yacc.c:1646  */
+#line 1924 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 35:
 #line 251 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_function_arg(); }
-#line 1932 "ptx.tab.c" /* yacc.c:1646  */
+#line 1930 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 36:
 #line 252 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_space_spec(reg_space,0); }
-#line 1938 "ptx.tab.c" /* yacc.c:1646  */
+#line 1936 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 37:
 #line 252 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_function_arg(); }
-#line 1944 "ptx.tab.c" /* yacc.c:1646  */
+#line 1942 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 41:
 #line 258 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_ptr_spec(global_space); }
-#line 1950 "ptx.tab.c" /* yacc.c:1646  */
+#line 1948 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 42:
 #line 259 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_ptr_spec(local_space); }
-#line 1956 "ptx.tab.c" /* yacc.c:1646  */
+#line 1954 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 43:
 #line 260 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_ptr_spec(shared_space); }
-#line 1962 "ptx.tab.c" /* yacc.c:1646  */
+#line 1960 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 46:
 #line 266 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_directive(); }
-#line 1968 "ptx.tab.c" /* yacc.c:1646  */
+#line 1966 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 47:
 #line 267 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_instruction(); }
-#line 1974 "ptx.tab.c" /* yacc.c:1646  */
+#line 1972 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 48:
 #line 268 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_directive(); }
-#line 1980 "ptx.tab.c" /* yacc.c:1646  */
+#line 1978 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 49:
 #line 269 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_instruction(); }
-#line 1986 "ptx.tab.c" /* yacc.c:1646  */
+#line 1984 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 53:
 #line 275 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_version_info((yyvsp[0].double_value), 0); }
-#line 1992 "ptx.tab.c" /* yacc.c:1646  */
+#line 1990 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 54:
 #line 276 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_version_info((yyvsp[-1].double_value),1); }
-#line 1998 "ptx.tab.c" /* yacc.c:1646  */
+#line 1996 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 55:
 #line 277 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     {/*Do nothing*/}
-#line 2004 "ptx.tab.c" /* yacc.c:1646  */
+#line 2002 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 56:
 #line 278 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { target_header2((yyvsp[-2].string_value),(yyvsp[0].string_value)); }
-#line 2010 "ptx.tab.c" /* yacc.c:1646  */
+#line 2008 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 57:
 #line 279 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { target_header3((yyvsp[-4].string_value),(yyvsp[-2].string_value),(yyvsp[0].string_value)); }
-#line 2016 "ptx.tab.c" /* yacc.c:1646  */
+#line 2014 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 58:
 #line 280 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { target_header((yyvsp[0].string_value)); }
-#line 2022 "ptx.tab.c" /* yacc.c:1646  */
+#line 2020 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 59:
 #line 281 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_file((yyvsp[-1].int_value),(yyvsp[0].string_value)); }
-#line 2028 "ptx.tab.c" /* yacc.c:1646  */
+#line 2026 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 61:
 #line 283 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_pragma((yyvsp[-1].string_value)); }
-#line 2034 "ptx.tab.c" /* yacc.c:1646  */
+#line 2032 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 62:
 #line 284 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     {/*Do nothing*/}
-#line 2040 "ptx.tab.c" /* yacc.c:1646  */
+#line 2038 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 63:
 #line 287 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_variables(); }
-#line 2046 "ptx.tab.c" /* yacc.c:1646  */
+#line 2044 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 64:
 #line 288 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_variables(); }
-#line 2052 "ptx.tab.c" /* yacc.c:1646  */
+#line 2050 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 65:
 #line 289 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_variables(); }
-#line 2058 "ptx.tab.c" /* yacc.c:1646  */
+#line 2056 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 66:
 #line 290 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_constptr((yyvsp[-4].string_value), (yyvsp[-2].string_value), (yyvsp[0].int_value)); }
-#line 2064 "ptx.tab.c" /* yacc.c:1646  */
+#line 2062 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 67:
 #line 293 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { set_variable_type(); }
-#line 2070 "ptx.tab.c" /* yacc.c:1646  */
+#line 2068 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 70:
 #line 298 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_identifier((yyvsp[0].string_value),0,NON_ARRAY_IDENTIFIER); func_header_info((yyvsp[0].string_value));}
-#line 2076 "ptx.tab.c" /* yacc.c:1646  */
+#line 2074 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 71:
@@ -2089,1007 +2087,1007 @@ yyreduce:
 		}
 		free((yyvsp[-3].string_value));
 	}
-#line 2093 "ptx.tab.c" /* yacc.c:1646  */
+#line 2091 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 72:
 #line 311 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_identifier((yyvsp[-2].string_value),0,ARRAY_IDENTIFIER_NO_DIM); func_header_info((yyvsp[-2].string_value)); func_header_info("["); func_header_info("]");}
-#line 2099 "ptx.tab.c" /* yacc.c:1646  */
+#line 2097 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 73:
 #line 312 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_identifier((yyvsp[-3].string_value),(yyvsp[-1].int_value),ARRAY_IDENTIFIER); func_header_info((yyvsp[-3].string_value)); func_header_info_int("[",(yyvsp[-1].int_value)); func_header_info("]");}
-#line 2105 "ptx.tab.c" /* yacc.c:1646  */
+#line 2103 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 79:
 #line 321 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_extern_spec(); }
-#line 2111 "ptx.tab.c" /* yacc.c:1646  */
+#line 2109 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 80:
 #line 324 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_alignment_spec((yyvsp[0].int_value)); }
-#line 2117 "ptx.tab.c" /* yacc.c:1646  */
+#line 2115 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 81:
 #line 326 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     {  add_space_spec(reg_space,0); }
-#line 2123 "ptx.tab.c" /* yacc.c:1646  */
+#line 2121 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 82:
 #line 327 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     {  add_space_spec(reg_space,0); }
-#line 2129 "ptx.tab.c" /* yacc.c:1646  */
+#line 2127 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 84:
 #line 331 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     {  add_space_spec(const_space,(yyvsp[0].int_value)); }
-#line 2135 "ptx.tab.c" /* yacc.c:1646  */
+#line 2133 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 85:
 #line 332 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     {  add_space_spec(global_space,0); }
-#line 2141 "ptx.tab.c" /* yacc.c:1646  */
+#line 2139 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 86:
 #line 333 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     {  add_space_spec(local_space,0); }
-#line 2147 "ptx.tab.c" /* yacc.c:1646  */
+#line 2145 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 87:
 #line 334 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     {  add_space_spec(param_space_unclassified,0); }
-#line 2153 "ptx.tab.c" /* yacc.c:1646  */
+#line 2151 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 88:
 #line 335 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     {  add_space_spec(shared_space,0); }
-#line 2159 "ptx.tab.c" /* yacc.c:1646  */
+#line 2157 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 89:
 #line 336 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     {  add_space_spec(surf_space,0); }
-#line 2165 "ptx.tab.c" /* yacc.c:1646  */
+#line 2163 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 90:
 #line 337 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     {  add_space_spec(tex_space,0); }
-#line 2171 "ptx.tab.c" /* yacc.c:1646  */
+#line 2169 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 93:
 #line 344 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     {  add_option(V2_TYPE); func_header_info(".v2");}
-#line 2177 "ptx.tab.c" /* yacc.c:1646  */
+#line 2175 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 94:
 #line 345 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     {  add_option(V3_TYPE); func_header_info(".v3");}
-#line 2183 "ptx.tab.c" /* yacc.c:1646  */
+#line 2181 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 95:
 #line 346 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     {  add_option(V4_TYPE); func_header_info(".v4");}
-#line 2189 "ptx.tab.c" /* yacc.c:1646  */
+#line 2187 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 96:
 #line 349 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_scalar_type_spec( S8_TYPE ); }
-#line 2195 "ptx.tab.c" /* yacc.c:1646  */
+#line 2193 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 97:
 #line 350 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_scalar_type_spec( S16_TYPE ); }
-#line 2201 "ptx.tab.c" /* yacc.c:1646  */
+#line 2199 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 98:
 #line 351 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_scalar_type_spec( S32_TYPE ); }
-#line 2207 "ptx.tab.c" /* yacc.c:1646  */
+#line 2205 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 99:
 #line 352 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_scalar_type_spec( S64_TYPE ); }
-#line 2213 "ptx.tab.c" /* yacc.c:1646  */
+#line 2211 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 100:
 #line 353 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_scalar_type_spec( U8_TYPE ); }
-#line 2219 "ptx.tab.c" /* yacc.c:1646  */
+#line 2217 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 101:
 #line 354 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_scalar_type_spec( U16_TYPE ); }
-#line 2225 "ptx.tab.c" /* yacc.c:1646  */
+#line 2223 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 102:
 #line 355 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_scalar_type_spec( U32_TYPE ); }
-#line 2231 "ptx.tab.c" /* yacc.c:1646  */
+#line 2229 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 103:
 #line 356 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_scalar_type_spec( U64_TYPE ); }
-#line 2237 "ptx.tab.c" /* yacc.c:1646  */
+#line 2235 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 104:
 #line 357 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_scalar_type_spec( F16_TYPE ); }
-#line 2243 "ptx.tab.c" /* yacc.c:1646  */
+#line 2241 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 105:
 #line 358 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_scalar_type_spec( F32_TYPE ); }
-#line 2249 "ptx.tab.c" /* yacc.c:1646  */
+#line 2247 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 106:
 #line 359 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_scalar_type_spec( F64_TYPE ); }
-#line 2255 "ptx.tab.c" /* yacc.c:1646  */
+#line 2253 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 107:
 #line 360 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_scalar_type_spec( FF64_TYPE ); }
-#line 2261 "ptx.tab.c" /* yacc.c:1646  */
+#line 2259 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 108:
 #line 361 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_scalar_type_spec( B8_TYPE );  }
-#line 2267 "ptx.tab.c" /* yacc.c:1646  */
+#line 2265 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 109:
 #line 362 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_scalar_type_spec( B16_TYPE ); }
-#line 2273 "ptx.tab.c" /* yacc.c:1646  */
+#line 2271 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 110:
 #line 363 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_scalar_type_spec( B32_TYPE ); }
-#line 2279 "ptx.tab.c" /* yacc.c:1646  */
+#line 2277 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 111:
 #line 364 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_scalar_type_spec( B64_TYPE ); }
-#line 2285 "ptx.tab.c" /* yacc.c:1646  */
+#line 2283 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 112:
 #line 365 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_scalar_type_spec( BB64_TYPE ); }
-#line 2291 "ptx.tab.c" /* yacc.c:1646  */
+#line 2289 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 113:
 #line 366 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_scalar_type_spec( BB128_TYPE ); }
-#line 2297 "ptx.tab.c" /* yacc.c:1646  */
+#line 2295 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 114:
 #line 367 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_scalar_type_spec( PRED_TYPE ); }
-#line 2303 "ptx.tab.c" /* yacc.c:1646  */
+#line 2301 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 115:
 #line 368 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_scalar_type_spec( TEXREF_TYPE ); }
-#line 2309 "ptx.tab.c" /* yacc.c:1646  */
+#line 2307 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 116:
 #line 369 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_scalar_type_spec( SAMPLERREF_TYPE ); }
-#line 2315 "ptx.tab.c" /* yacc.c:1646  */
+#line 2313 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 117:
 #line 370 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_scalar_type_spec( SURFREF_TYPE ); }
-#line 2321 "ptx.tab.c" /* yacc.c:1646  */
+#line 2319 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 118:
 #line 373 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_array_initializer(); }
-#line 2327 "ptx.tab.c" /* yacc.c:1646  */
+#line 2325 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 119:
 #line 374 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { syntax_not_implemented(); }
-#line 2333 "ptx.tab.c" /* yacc.c:1646  */
+#line 2331 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 123:
 #line 380 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_label((yyvsp[-1].string_value)); }
-#line 2339 "ptx.tab.c" /* yacc.c:1646  */
+#line 2337 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 125:
 #line 383 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { set_return(); }
-#line 2345 "ptx.tab.c" /* yacc.c:1646  */
+#line 2343 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 131:
 #line 390 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_opcode((yyvsp[0].int_value)); }
-#line 2351 "ptx.tab.c" /* yacc.c:1646  */
+#line 2349 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 133:
 #line 391 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_opcode((yyvsp[0].int_value)); }
-#line 2357 "ptx.tab.c" /* yacc.c:1646  */
+#line 2355 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 134:
 #line 393 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_pred((yyvsp[0].string_value),0, -1); }
-#line 2363 "ptx.tab.c" /* yacc.c:1646  */
+#line 2361 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 135:
 #line 394 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_pred((yyvsp[0].string_value),1, -1); }
-#line 2369 "ptx.tab.c" /* yacc.c:1646  */
+#line 2367 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 136:
 #line 395 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_pred((yyvsp[-1].string_value),0,1); }
-#line 2375 "ptx.tab.c" /* yacc.c:1646  */
+#line 2373 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 137:
 #line 396 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_pred((yyvsp[-1].string_value),0,2); }
-#line 2381 "ptx.tab.c" /* yacc.c:1646  */
+#line 2379 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 138:
 #line 397 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_pred((yyvsp[-1].string_value),0,3); }
-#line 2387 "ptx.tab.c" /* yacc.c:1646  */
+#line 2385 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 139:
 #line 398 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_pred((yyvsp[-1].string_value),0,5); }
-#line 2393 "ptx.tab.c" /* yacc.c:1646  */
+#line 2391 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 140:
 #line 399 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_pred((yyvsp[-1].string_value),0,6); }
-#line 2399 "ptx.tab.c" /* yacc.c:1646  */
+#line 2397 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 141:
 #line 400 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_pred((yyvsp[-1].string_value),0,10); }
-#line 2405 "ptx.tab.c" /* yacc.c:1646  */
+#line 2403 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 142:
 #line 401 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_pred((yyvsp[-1].string_value),0,12); }
-#line 2411 "ptx.tab.c" /* yacc.c:1646  */
+#line 2409 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 143:
 #line 402 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_pred((yyvsp[-1].string_value),0,13); }
-#line 2417 "ptx.tab.c" /* yacc.c:1646  */
+#line 2415 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 144:
 #line 403 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_pred((yyvsp[-1].string_value),0,17); }
-#line 2423 "ptx.tab.c" /* yacc.c:1646  */
+#line 2421 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 145:
 #line 404 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_pred((yyvsp[-1].string_value),0,19); }
-#line 2429 "ptx.tab.c" /* yacc.c:1646  */
+#line 2427 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 146:
 #line 405 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_pred((yyvsp[-1].string_value),0,28); }
-#line 2435 "ptx.tab.c" /* yacc.c:1646  */
+#line 2433 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 153:
 #line 415 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_option(SYNC_OPTION); }
-#line 2441 "ptx.tab.c" /* yacc.c:1646  */
+#line 2439 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 154:
 #line 416 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_option(ARRIVE_OPTION); }
-#line 2447 "ptx.tab.c" /* yacc.c:1646  */
+#line 2445 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 155:
 #line 417 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_option(RED_OPTION); }
-#line 2453 "ptx.tab.c" /* yacc.c:1646  */
+#line 2451 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 156:
 #line 418 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_option(UNI_OPTION); }
-#line 2459 "ptx.tab.c" /* yacc.c:1646  */
+#line 2457 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 157:
 #line 419 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_option(WIDE_OPTION); }
-#line 2465 "ptx.tab.c" /* yacc.c:1646  */
+#line 2463 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 158:
 #line 420 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_option(ANY_OPTION); }
-#line 2471 "ptx.tab.c" /* yacc.c:1646  */
+#line 2469 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 159:
 #line 421 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_option(ALL_OPTION); }
-#line 2477 "ptx.tab.c" /* yacc.c:1646  */
+#line 2475 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 160:
 #line 422 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_option(BALLOT_OPTION); }
-#line 2483 "ptx.tab.c" /* yacc.c:1646  */
+#line 2481 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 161:
 #line 423 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_option(GLOBAL_OPTION); }
-#line 2489 "ptx.tab.c" /* yacc.c:1646  */
+#line 2487 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 162:
 #line 424 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_option(CTA_OPTION); }
-#line 2495 "ptx.tab.c" /* yacc.c:1646  */
+#line 2493 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 163:
 #line 425 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_option(SYS_OPTION); }
-#line 2501 "ptx.tab.c" /* yacc.c:1646  */
+#line 2499 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 164:
 #line 426 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_option(GEOM_MODIFIER_1D); }
-#line 2507 "ptx.tab.c" /* yacc.c:1646  */
+#line 2505 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 165:
 #line 427 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_option(GEOM_MODIFIER_2D); }
-#line 2513 "ptx.tab.c" /* yacc.c:1646  */
+#line 2511 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 166:
 #line 428 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_option(GEOM_MODIFIER_3D); }
-#line 2519 "ptx.tab.c" /* yacc.c:1646  */
+#line 2517 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 167:
 #line 429 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_option(SAT_OPTION); }
-#line 2525 "ptx.tab.c" /* yacc.c:1646  */
+#line 2523 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 168:
 #line 430 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_option(FTZ_OPTION); }
-#line 2531 "ptx.tab.c" /* yacc.c:1646  */
+#line 2529 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 169:
 #line 431 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_option(NEG_OPTION); }
-#line 2537 "ptx.tab.c" /* yacc.c:1646  */
+#line 2535 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 170:
 #line 432 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_option(APPROX_OPTION); }
-#line 2543 "ptx.tab.c" /* yacc.c:1646  */
+#line 2541 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 171:
 #line 433 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_option(FULL_OPTION); }
-#line 2549 "ptx.tab.c" /* yacc.c:1646  */
+#line 2547 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 172:
 #line 434 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_option(EXIT_OPTION); }
-#line 2555 "ptx.tab.c" /* yacc.c:1646  */
+#line 2553 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 173:
 #line 435 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_option(ABS_OPTION); }
-#line 2561 "ptx.tab.c" /* yacc.c:1646  */
+#line 2559 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 175:
 #line 437 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_option(TO_OPTION); }
-#line 2567 "ptx.tab.c" /* yacc.c:1646  */
+#line 2565 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 176:
 #line 438 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_option(HALF_OPTION); }
-#line 2573 "ptx.tab.c" /* yacc.c:1646  */
+#line 2571 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 177:
 #line 439 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_option(CA_OPTION); }
-#line 2579 "ptx.tab.c" /* yacc.c:1646  */
+#line 2577 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 178:
 #line 440 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_option(CG_OPTION); }
-#line 2585 "ptx.tab.c" /* yacc.c:1646  */
+#line 2583 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 179:
 #line 441 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_option(CS_OPTION); }
-#line 2591 "ptx.tab.c" /* yacc.c:1646  */
+#line 2589 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 180:
 #line 442 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_option(LU_OPTION); }
-#line 2597 "ptx.tab.c" /* yacc.c:1646  */
+#line 2595 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 181:
 #line 443 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_option(CV_OPTION); }
-#line 2603 "ptx.tab.c" /* yacc.c:1646  */
+#line 2601 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 182:
 #line 444 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_option(WB_OPTION); }
-#line 2609 "ptx.tab.c" /* yacc.c:1646  */
+#line 2607 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 183:
 #line 445 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_option(WT_OPTION); }
-#line 2615 "ptx.tab.c" /* yacc.c:1646  */
+#line 2613 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 184:
 #line 448 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_option(ATOMIC_AND); }
-#line 2621 "ptx.tab.c" /* yacc.c:1646  */
+#line 2619 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 185:
 #line 449 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_option(ATOMIC_POPC); }
-#line 2627 "ptx.tab.c" /* yacc.c:1646  */
+#line 2625 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 186:
 #line 450 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_option(ATOMIC_OR); }
-#line 2633 "ptx.tab.c" /* yacc.c:1646  */
+#line 2631 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 187:
 #line 451 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_option(ATOMIC_XOR); }
-#line 2639 "ptx.tab.c" /* yacc.c:1646  */
+#line 2637 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 188:
 #line 452 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_option(ATOMIC_CAS); }
-#line 2645 "ptx.tab.c" /* yacc.c:1646  */
+#line 2643 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 189:
 #line 453 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_option(ATOMIC_EXCH); }
-#line 2651 "ptx.tab.c" /* yacc.c:1646  */
+#line 2649 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 190:
 #line 454 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_option(ATOMIC_ADD); }
-#line 2657 "ptx.tab.c" /* yacc.c:1646  */
+#line 2655 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 191:
 #line 455 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_option(ATOMIC_INC); }
-#line 2663 "ptx.tab.c" /* yacc.c:1646  */
+#line 2661 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 192:
 #line 456 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_option(ATOMIC_DEC); }
-#line 2669 "ptx.tab.c" /* yacc.c:1646  */
+#line 2667 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 193:
 #line 457 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_option(ATOMIC_MIN); }
-#line 2675 "ptx.tab.c" /* yacc.c:1646  */
+#line 2673 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 194:
 #line 458 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_option(ATOMIC_MAX); }
-#line 2681 "ptx.tab.c" /* yacc.c:1646  */
+#line 2679 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 197:
 #line 464 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_option(RN_OPTION); }
-#line 2687 "ptx.tab.c" /* yacc.c:1646  */
+#line 2685 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 198:
 #line 465 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_option(RZ_OPTION); }
-#line 2693 "ptx.tab.c" /* yacc.c:1646  */
+#line 2691 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 199:
 #line 466 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_option(RM_OPTION); }
-#line 2699 "ptx.tab.c" /* yacc.c:1646  */
+#line 2697 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 200:
 #line 467 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_option(RP_OPTION); }
-#line 2705 "ptx.tab.c" /* yacc.c:1646  */
+#line 2703 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 201:
 #line 470 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_option(RNI_OPTION); }
-#line 2711 "ptx.tab.c" /* yacc.c:1646  */
+#line 2709 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 202:
 #line 471 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_option(RZI_OPTION); }
-#line 2717 "ptx.tab.c" /* yacc.c:1646  */
+#line 2715 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 203:
 #line 472 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_option(RMI_OPTION); }
-#line 2723 "ptx.tab.c" /* yacc.c:1646  */
+#line 2721 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 204:
 #line 473 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_option(RPI_OPTION); }
-#line 2729 "ptx.tab.c" /* yacc.c:1646  */
+#line 2727 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 205:
 #line 476 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_option(EQ_OPTION); }
-#line 2735 "ptx.tab.c" /* yacc.c:1646  */
+#line 2733 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 206:
 #line 477 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_option(NE_OPTION); }
-#line 2741 "ptx.tab.c" /* yacc.c:1646  */
+#line 2739 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 207:
 #line 478 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_option(LT_OPTION); }
-#line 2747 "ptx.tab.c" /* yacc.c:1646  */
+#line 2745 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 208:
 #line 479 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_option(LE_OPTION); }
-#line 2753 "ptx.tab.c" /* yacc.c:1646  */
+#line 2751 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 209:
 #line 480 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_option(GT_OPTION); }
-#line 2759 "ptx.tab.c" /* yacc.c:1646  */
+#line 2757 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 210:
 #line 481 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_option(GE_OPTION); }
-#line 2765 "ptx.tab.c" /* yacc.c:1646  */
+#line 2763 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 211:
 #line 482 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_option(LO_OPTION); }
-#line 2771 "ptx.tab.c" /* yacc.c:1646  */
+#line 2769 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 212:
 #line 483 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_option(LS_OPTION); }
-#line 2777 "ptx.tab.c" /* yacc.c:1646  */
+#line 2775 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 213:
 #line 484 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_option(HI_OPTION); }
-#line 2783 "ptx.tab.c" /* yacc.c:1646  */
+#line 2781 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 214:
 #line 485 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_option(HS_OPTION); }
-#line 2789 "ptx.tab.c" /* yacc.c:1646  */
+#line 2787 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 215:
 #line 486 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_option(EQU_OPTION); }
-#line 2795 "ptx.tab.c" /* yacc.c:1646  */
+#line 2793 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 216:
 #line 487 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_option(NEU_OPTION); }
-#line 2801 "ptx.tab.c" /* yacc.c:1646  */
+#line 2799 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 217:
 #line 488 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_option(LTU_OPTION); }
-#line 2807 "ptx.tab.c" /* yacc.c:1646  */
+#line 2805 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 218:
 #line 489 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_option(LEU_OPTION); }
-#line 2813 "ptx.tab.c" /* yacc.c:1646  */
+#line 2811 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 219:
 #line 490 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_option(GTU_OPTION); }
-#line 2819 "ptx.tab.c" /* yacc.c:1646  */
+#line 2817 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 220:
 #line 491 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_option(GEU_OPTION); }
-#line 2825 "ptx.tab.c" /* yacc.c:1646  */
+#line 2823 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 221:
 #line 492 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_option(NUM_OPTION); }
-#line 2831 "ptx.tab.c" /* yacc.c:1646  */
+#line 2829 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 222:
 #line 493 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_option(NAN_OPTION); }
-#line 2837 "ptx.tab.c" /* yacc.c:1646  */
+#line 2835 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 225:
 #line 499 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_scalar_operand( (yyvsp[0].string_value) ); }
-#line 2843 "ptx.tab.c" /* yacc.c:1646  */
+#line 2841 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 226:
 #line 500 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_neg_pred_operand( (yyvsp[0].string_value) ); }
-#line 2849 "ptx.tab.c" /* yacc.c:1646  */
+#line 2847 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 227:
 #line 501 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_scalar_operand( (yyvsp[0].string_value) ); change_operand_neg(); }
-#line 2855 "ptx.tab.c" /* yacc.c:1646  */
+#line 2853 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 232:
 #line 506 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { change_operand_neg(); }
-#line 2861 "ptx.tab.c" /* yacc.c:1646  */
+#line 2859 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 234:
 #line 508 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_address_operand((yyvsp[-2].string_value),(yyvsp[0].int_value)); }
-#line 2867 "ptx.tab.c" /* yacc.c:1646  */
+#line 2865 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 235:
 #line 509 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_scalar_operand( (yyvsp[-1].string_value) ); change_operand_lohi(1);}
-#line 2873 "ptx.tab.c" /* yacc.c:1646  */
+#line 2871 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 236:
 #line 510 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_scalar_operand( (yyvsp[-1].string_value) ); change_operand_lohi(1); change_operand_neg();}
-#line 2879 "ptx.tab.c" /* yacc.c:1646  */
+#line 2877 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 237:
 #line 511 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_scalar_operand( (yyvsp[-1].string_value) ); change_operand_lohi(2);}
-#line 2885 "ptx.tab.c" /* yacc.c:1646  */
+#line 2883 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 238:
 #line 512 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_scalar_operand( (yyvsp[-1].string_value) ); change_operand_lohi(2); change_operand_neg();}
-#line 2891 "ptx.tab.c" /* yacc.c:1646  */
+#line 2889 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 239:
 #line 513 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_2vector_operand((yyvsp[-2].string_value),(yyvsp[0].string_value)); change_double_operand_type(-1);}
-#line 2897 "ptx.tab.c" /* yacc.c:1646  */
+#line 2895 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 240:
 #line 514 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_2vector_operand((yyvsp[-3].string_value),(yyvsp[-1].string_value)); change_double_operand_type(-1); change_operand_lohi(1);}
-#line 2903 "ptx.tab.c" /* yacc.c:1646  */
+#line 2901 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 241:
 #line 515 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_2vector_operand((yyvsp[-3].string_value),(yyvsp[-1].string_value)); change_double_operand_type(-1); change_operand_lohi(2);}
-#line 2909 "ptx.tab.c" /* yacc.c:1646  */
+#line 2907 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 242:
 #line 516 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_2vector_operand((yyvsp[-2].string_value),(yyvsp[0].string_value)); change_double_operand_type(-3);}
-#line 2915 "ptx.tab.c" /* yacc.c:1646  */
+#line 2913 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 243:
 #line 517 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_2vector_operand((yyvsp[-3].string_value),(yyvsp[-1].string_value)); change_double_operand_type(-3); change_operand_lohi(1);}
-#line 2921 "ptx.tab.c" /* yacc.c:1646  */
+#line 2919 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 244:
 #line 518 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_2vector_operand((yyvsp[-3].string_value),(yyvsp[-1].string_value)); change_double_operand_type(-3); change_operand_lohi(2);}
-#line 2927 "ptx.tab.c" /* yacc.c:1646  */
+#line 2925 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 245:
 #line 521 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_2vector_operand((yyvsp[-3].string_value),(yyvsp[-1].string_value)); }
-#line 2933 "ptx.tab.c" /* yacc.c:1646  */
+#line 2931 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 246:
 #line 522 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_3vector_operand((yyvsp[-5].string_value),(yyvsp[-3].string_value),(yyvsp[-1].string_value)); }
-#line 2939 "ptx.tab.c" /* yacc.c:1646  */
+#line 2937 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 247:
 #line 523 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_4vector_operand((yyvsp[-7].string_value),(yyvsp[-5].string_value),(yyvsp[-3].string_value),(yyvsp[-1].string_value)); }
-#line 2945 "ptx.tab.c" /* yacc.c:1646  */
+#line 2943 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 248:
 #line 524 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_1vector_operand((yyvsp[-1].string_value)); }
-#line 2951 "ptx.tab.c" /* yacc.c:1646  */
+#line 2949 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 249:
 #line 527 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_scalar_operand((yyvsp[-1].string_value)); }
-#line 2957 "ptx.tab.c" /* yacc.c:1646  */
+#line 2955 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 251:
 #line 532 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_builtin_operand((yyvsp[-1].int_value),(yyvsp[0].int_value)); }
-#line 2963 "ptx.tab.c" /* yacc.c:1646  */
+#line 2961 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 252:
 #line 533 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_builtin_operand((yyvsp[0].int_value),-1); }
-#line 2969 "ptx.tab.c" /* yacc.c:1646  */
+#line 2967 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 253:
 #line 536 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_memory_operand(); }
-#line 2975 "ptx.tab.c" /* yacc.c:1646  */
+#line 2973 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 254:
 #line 537 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_memory_operand(); change_memory_addr_space((yyvsp[-3].string_value)); }
-#line 2981 "ptx.tab.c" /* yacc.c:1646  */
+#line 2979 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 255:
 #line 538 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { change_memory_addr_space((yyvsp[-3].string_value)); }
-#line 2987 "ptx.tab.c" /* yacc.c:1646  */
+#line 2985 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 256:
 #line 539 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { change_memory_addr_space((yyvsp[-3].string_value)); add_memory_operand();}
-#line 2993 "ptx.tab.c" /* yacc.c:1646  */
+#line 2991 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 257:
 #line 540 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { change_operand_neg(); }
-#line 2999 "ptx.tab.c" /* yacc.c:1646  */
+#line 2997 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 258:
 #line 543 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_double_operand((yyvsp[-2].string_value),(yyvsp[0].string_value)); change_double_operand_type(1); }
-#line 3005 "ptx.tab.c" /* yacc.c:1646  */
+#line 3003 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 259:
 #line 544 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_double_operand((yyvsp[-3].string_value),(yyvsp[-1].string_value)); change_double_operand_type(1); change_operand_lohi(1); }
-#line 3011 "ptx.tab.c" /* yacc.c:1646  */
+#line 3009 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 260:
 #line 545 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_double_operand((yyvsp[-3].string_value),(yyvsp[-1].string_value)); change_double_operand_type(1); change_operand_lohi(2); }
-#line 3017 "ptx.tab.c" /* yacc.c:1646  */
+#line 3015 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 261:
 #line 546 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_double_operand((yyvsp[-3].string_value),(yyvsp[0].string_value)); change_double_operand_type(2); }
-#line 3023 "ptx.tab.c" /* yacc.c:1646  */
+#line 3021 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 262:
 #line 547 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_double_operand((yyvsp[-4].string_value),(yyvsp[-1].string_value)); change_double_operand_type(2); change_operand_lohi(1); }
-#line 3029 "ptx.tab.c" /* yacc.c:1646  */
+#line 3027 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 263:
 #line 548 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_double_operand((yyvsp[-4].string_value),(yyvsp[-1].string_value)); change_double_operand_type(2); change_operand_lohi(2); }
-#line 3035 "ptx.tab.c" /* yacc.c:1646  */
+#line 3033 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 264:
 #line 549 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_address_operand((yyvsp[-3].string_value),(yyvsp[0].int_value)); change_double_operand_type(3); }
-#line 3041 "ptx.tab.c" /* yacc.c:1646  */
+#line 3039 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 265:
 #line 552 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_literal_int((yyvsp[0].int_value)); }
-#line 3047 "ptx.tab.c" /* yacc.c:1646  */
+#line 3045 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 266:
 #line 553 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_literal_float((yyvsp[0].float_value)); }
-#line 3053 "ptx.tab.c" /* yacc.c:1646  */
+#line 3051 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 267:
 #line 554 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_literal_double((yyvsp[0].double_value)); }
-#line 3059 "ptx.tab.c" /* yacc.c:1646  */
+#line 3057 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 268:
 #line 557 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_address_operand((yyvsp[0].string_value),0); }
-#line 3065 "ptx.tab.c" /* yacc.c:1646  */
+#line 3063 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 269:
 #line 558 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_address_operand((yyvsp[-1].string_value),0); change_operand_lohi(1);}
-#line 3071 "ptx.tab.c" /* yacc.c:1646  */
+#line 3069 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 270:
 #line 559 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_address_operand((yyvsp[-1].string_value),0); change_operand_lohi(2); }
-#line 3077 "ptx.tab.c" /* yacc.c:1646  */
+#line 3075 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 271:
 #line 560 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_address_operand((yyvsp[-2].string_value),(yyvsp[0].int_value)); }
-#line 3083 "ptx.tab.c" /* yacc.c:1646  */
+#line 3081 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
   case 272:
 #line 561 "../src/cuda-sim/ptx.y" /* yacc.c:1646  */
     { add_address_operand2((yyvsp[0].int_value)); }
-#line 3089 "ptx.tab.c" /* yacc.c:1646  */
+#line 3087 "ptx.tab.c" /* yacc.c:1646  */
     break;
 
 
-#line 3093 "ptx.tab.c" /* yacc.c:1646  */
+#line 3091 "ptx.tab.c" /* yacc.c:1646  */
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
