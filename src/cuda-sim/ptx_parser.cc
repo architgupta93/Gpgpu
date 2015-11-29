@@ -29,6 +29,8 @@
 #include "ptx_ir.h"
 #include "ptx.tab.h"
 #include <stdarg.h>
+#include <string>	//SOHUM: Added for string manipulation
+#include <stack>	//Added to maintain and create stack
 
 extern int ptx_error( const char *s );
 extern int ptx_lineno;
@@ -612,11 +614,33 @@ void add_scalar_type_spec( int type_spec )
 void add_label( const char *identifier ) 
 {
    PTX_PARSE_DPRINTF("add_label");
+
+	//SOHUM: Compare the label and add states to the branch_labels stack
+	std::string identifier_str(identifier, strlen(identifier));	
+	std::string ext_identifier = (EXTRN_IDENTIFIER);
+	std::string int_identifier = (INTRN_IDENTIFIER);
+	
+	bool type = false;
+	if( identifier_str.find(ext_identifier) != std::string::npos){
+		//the label is extrinsic branch label
+		PTX_PARSE_DPRINTF("found EXTRINSIC BRANCH label %s at lineno. ",identifier);   
+		type = BRANCH_EXTRN;
+		branch_labels.push(type);
+	} 
+	else if( identifier_str.find(int_identifier) != std::string::npos){
+		//the label is extrinsic branch label
+		PTX_PARSE_DPRINTF("found INTRINSIC BRANCH label %s at lineno. ",identifier);   
+		type = BRANCH_INTRN;
+		branch_labels.push(type);
+	} 
+	//else not a label, dont do anything
+
    symbol *s = g_current_symbol_table->lookup(identifier);
    if ( s != NULL ) {
       g_label = s;
    } else {
       g_label = g_current_symbol_table->add_variable(identifier,NULL,0,g_filename,ptx_lineno);
+		//TODO: Sohum: maybe we can use their native symbol table to print the inputted label lines
    }
 }
 

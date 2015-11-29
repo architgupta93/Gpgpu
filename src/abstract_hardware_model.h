@@ -89,6 +89,12 @@ typedef enum uarch_op_t op_type;
 
 
 //SOHUM: Added code for types of branches to be instrumented
+
+//the two macros below are used as identifiers for extrinsic and intrinsic branches
+#define EXTRN_IDENTIFIER "EXTRN"
+#define INTRN_IDENTIFIER "INTRN"
+
+//Don't change these ***EXTREMELY IMP***
 #define BRANCH_INTRN 0
 #define BRANCH_EXTRN 1
 enum br_type_t {
