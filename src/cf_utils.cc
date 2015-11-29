@@ -74,11 +74,16 @@ void tagged_branch_target_buffer_entry::merge(const tagged_branch_target_buffer_
 
 void tagged_branch_target_buffer_entry::print()
 {
-	//printf("%12x %12x %20u %6f %6f\n", source, target, instances, get_taken_fraction(), get_occupancy());				
-	printf("%12x ", source);
-	if(tag==BRANCH_INTRN) printf("intrinsic ");
-	else printf("extrinsic ");
-	printf("%12x %20u %6f %6f\n", target, instances, get_taken_fraction(), get_occupancy());				
+	const char* int_desc = "intrinsic";
+	const char* ext_desc = "extrinsic";
+	if (tag==BRANCH_INTRN)
+		printf("%12x %12s %12x %10u %12f %15f\n", source, int_desc, target, instances, get_taken_fraction(), get_occupancy());
+	else				
+		printf("%12x %12s %12x %10u %12f %15f\n", source, ext_desc, target, instances, get_taken_fraction(), get_occupancy());
+//	printf("%12x ", source);
+//	if(tag==BRANCH_INTRN) printf("intrinsic ");
+//	else printf("extrinsic ");
+//	printf("%12x %20u %6f %6f\n", target, instances, get_taken_fraction(), get_occupancy());				
 //	for (int i=0; i<WARP_SIZE+1;i++)
 //	{
 //		printf("W%d: %d, ", i, occupancy[i]);
@@ -115,7 +120,9 @@ const bool& _tag, const address_type& _src, const address_type& _targ)	//SOHUM: 
 
 void tagged_branch_target_buffer::print()
 {
-	printf("%12s %11s %12s %20s %6s %6s\n", "PC", "TYPE", "TARGET", "INSTANCES", "TAKEN", "OCC");
+	printf("\n\n----------------------------------------------------------------------------------------\n");
+	printf("%12s %12s %12s %10s %12s %15s\n", "PC", "TYPE", "TARGET", "INSTANCES", "TAKEN", "OCCUPANCY");
+	printf("----------------------------------------------------------------------------------------\n");
 	std::vector<tagged_branch_target_buffer_entry*>:: iterator it;
 	for (it=btb.begin(); it != btb.end(); it++)
 	{
