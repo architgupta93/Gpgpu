@@ -996,6 +996,7 @@ static std::list<operand_info> check_operands( int opcode,
 
 
 ptx_instruction::ptx_instruction( int opcode, 
+									branch_type br_t,		//SOHUM: branch type is passed here
                                   const symbol *pred, 
                                   int neg_pred, 
                                   int pred_mod,
@@ -1013,6 +1014,8 @@ ptx_instruction::ptx_instruction( int opcode,
    m_uid = ++g_num_ptx_inst_uid;
    m_PC = 0;
    m_opcode = opcode;
+	m_br_type = br_t;	//TODO: This is just stored in private	
+
    m_pred = pred;
    m_neg_pred = neg_pred;
    m_pred_mod = pred_mod;

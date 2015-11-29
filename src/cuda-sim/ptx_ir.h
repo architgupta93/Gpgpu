@@ -843,6 +843,7 @@ struct gpgpu_recon_t {
 class ptx_instruction : public warp_inst_t {
 public:
     ptx_instruction( int opcode, 
+					branch_type br_t,		//SOHUM: the type of branch
                     const symbol *pred, 
                     int neg_pred, 
                     int pred_mod,
@@ -1032,6 +1033,7 @@ private:
    basic_block_t        *m_basic_block;
    unsigned          m_uid;
    addr_t            m_PC;
+	branch_type m_br_type;	//SOHUM: private branch type specifier
    std::string             m_source_file;
    unsigned                m_source_line;
    std::string          m_source;

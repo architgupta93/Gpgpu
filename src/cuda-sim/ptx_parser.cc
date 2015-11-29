@@ -70,6 +70,12 @@ int g_neg_pred;
 int g_pred_mod;
 symbol *g_label;
 int g_opcode = -1;
+
+//SOHUM: stack used to input and output branch labels
+//as they appear. Any branch (BRA_OP) must be preceded 
+//by a label
+std::stack<bool> branch_labels;
+
 std::list<operand_info> g_operands;
 std::list<int> g_options;
 std::list<int> g_scalar_type;
@@ -163,7 +169,6 @@ void start_function( int entry_point )
    g_func_info = NULL;
    g_entry_func_param_index=0;
 }
-
 char *g_add_identifier_cached__identifier = NULL;
 int g_add_identifier_cached__array_dim;
 int g_add_identifier_cached__array_ident;
@@ -267,7 +272,15 @@ void add_instruction()
 {
    PTX_PARSE_DPRINTF("add_instruction: %s", ((g_opcode>0)?g_opcode_string[g_opcode]:"<label>") );
    assert( g_shader_core_config != 0 );
-   ptx_instruction *i = new ptx_instruction( g_opcode, 
+	branch_type typ = NOT_BR;	//default
+	//SOHUM: Added code to check if this is branch
+	if(g_opcode == BRA_OP){
+		assert(!branch_labels.empty());	//ensure that the branch labels stack is not empty
+		typ  = (branch_labels.top() == BRANCH_INTRN ? INTRN : EXTRN);	//set the label correctly 
+		branch_labels.pop();	//pop this entry
+	}
+   ptx_instruction *i = new ptx_instruction( g_opcode,
+											typ,			//TODO:SOHUM:add code here to add the nature of the branch 
                                              g_pred, 
                                              g_neg_pred,
                                              g_pred_mod, 

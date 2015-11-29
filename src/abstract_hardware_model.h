@@ -88,6 +88,18 @@ enum uarch_op_t {
 typedef enum uarch_op_t op_type;
 
 
+//SOHUM: Added code for types of branches to be instrumented
+#define BRANCH_INTRN 0
+#define BRANCH_EXTRN 1
+enum br_type_t {
+	//The keywords used here is the same as that inserted as labels
+	//in the source code
+	NOT_BR,		//Not a branch (just a default)
+	EXTRN,		//Extrinsic
+	INTRN		//Intrinsic
+};
+typedef enum br_type_t branch_type;
+
 enum uarch_bar_t {
    NOT_BAR=-1,
    SYNC=1,
@@ -725,6 +737,7 @@ public:
         pc=(address_type)-1;
         reconvergence_pc=(address_type)-1;
         op=NO_OP;
+		br_type = NOT_BR;	//SOHUM: Default is not a branch
         bar_type=NOT_BAR;
         red_type=NOT_RED;
         bar_id=(unsigned)-1;
@@ -756,6 +769,27 @@ public:
     }
     bool is_load() const { return (op == LOAD_OP || memory_op == memory_load); }
     bool is_store() const { return (op == STORE_OP || memory_op == memory_store); }
+	
+	//SOHUM: Only use these functions to access the branch-type info
+	//MUST be called after all the other info about the instruction is set
+	bool is_branch_and_extrinsic() {
+		assert(op == BRANCH_OP);	//safety check		
+		return br_type == EXTRN;
+	} 
+	bool is_branch_and_intrinsic() {
+		assert(op == BRANCH_OP);	//safety check		
+		return br_type == INTRN;
+	}
+	void set_extrinsic(){
+		assert(op == BRANCH_OP);	//safety check		
+		br_type = EXTRN;	
+	}
+	void set_intrinsic(){
+		assert(op == BRANCH_OP);	//safety check		
+		br_type = INTRN;	
+	}
+
+ 
     unsigned get_num_operands() const {return num_operands;}
     unsigned get_num_regs() const {return num_regs;}
     void set_num_regs(unsigned num) {num_regs=num;}
@@ -802,6 +836,7 @@ public:
     cache_operator_type cache_op;
 
 protected:
+	branch_type br_type;		// SOHUM: branch type if a branch
     bool m_decoded;
     virtual void pre_decode() {}
 };

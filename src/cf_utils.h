@@ -11,13 +11,17 @@ typedef unsigned address_type;
 #define NOT_TAKEN false
 #define WARP_SIZE 32
 
+//SOHUM: The definitions used for branch types
+#define BRANCH_INTRN 0
+#define BRANCH_EXTRN 1
+
 class tagged_branch_target_buffer_entry
 {
 public:
 
 	// Constructor for the class
-	tagged_branch_target_buffer_entry(bool& _tag, address_type _src,
-	address_type _targ);
+	tagged_branch_target_buffer_entry(bool _tag, address_type _src,
+	address_type _targ);	//SOHUM: changed signature of tag from bool& to bool
 	tagged_branch_target_buffer_entry(address_type _src, address_type _targ);
 
 	// Destructor for the class
@@ -68,7 +72,7 @@ private:
 
 public:
 	tagged_branch_target_buffer();
-	tagged_branch_target_buffer_entry* find_btb_entry(const address_type& _src,
+	tagged_branch_target_buffer_entry* find_btb_entry( const bool& _tag, const address_type& _src,
 	const address_type& _targ);
 	void merge_btb(const tagged_branch_target_buffer* child_btb);
 	void print();

@@ -775,7 +775,11 @@ void ptx_instruction::set_opcode_and_latency()
    }
 	set_fp_or_int_archop();
 	set_mul_div_or_other_archop();
-
+	
+	//SOHUM: At this point the opcodes are set correctly
+	//set the type of branch instruction type
+	assert(op == BRANCH_OP);		//safety check
+	br_type = m_br_type;
 }
 
 void ptx_thread_info::ptx_fetch_inst( inst_t &inst ) const
@@ -871,7 +875,7 @@ void ptx_instruction::pre_decode()
       break;
    }
 
-   set_opcode_and_latency();
+   set_opcode_and_latency();	//SOHUM: here the branch types is also set
    set_bar_type();
    // Get register operands
    int n=0,m=0;

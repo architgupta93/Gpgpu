@@ -3,7 +3,7 @@
 
 // Declaring functions for a BTB entry
 
-tagged_branch_target_buffer_entry::tagged_branch_target_buffer_entry(bool& _tag,
+tagged_branch_target_buffer_entry::tagged_branch_target_buffer_entry(bool _tag,
 address_type _src, address_type _targ)
 {
 	tag = _tag;
@@ -74,7 +74,11 @@ void tagged_branch_target_buffer_entry::merge(const tagged_branch_target_buffer_
 
 void tagged_branch_target_buffer_entry::print()
 {
-	printf("%12x %12x %20u %6f %6f\n", source, target, instances, get_taken_fraction(), get_occupancy());				
+	//printf("%12x %12x %20u %6f %6f\n", source, target, instances, get_taken_fraction(), get_occupancy());				
+	printf("%12x ", source);
+	if(tag==BRANCH_INTRN) printf("intrinsic ");
+	else printf("extrinsic ");
+	printf("%12x %20u %6f %6f\n", target, instances, get_taken_fraction(), get_occupancy());				
 //	for (int i=0; i<WARP_SIZE+1;i++)
 //	{
 //		printf("W%d: %d, ", i, occupancy[i]);
@@ -96,13 +100,13 @@ tagged_branch_target_buffer::tagged_branch_target_buffer()
 }
 
 tagged_branch_target_buffer_entry* tagged_branch_target_buffer::find_btb_entry(
-const address_type& _src, const address_type& _targ)
+const bool& _tag, const address_type& _src, const address_type& _targ)	//SOHUM: added tag info here, TODO
 {
 	std::vector<tagged_branch_target_buffer_entry*>:: iterator it;
 	it = std::find_if(btb.begin(), btb.end(), match_btb_entry(_src,_targ));
 	if(it != btb.end()) {return *it;}
 		// If the branch has already been seen, update it in the BTB
-	tagged_branch_target_buffer_entry* btb_entry = new tagged_branch_target_buffer_entry(_src,_targ);
+	tagged_branch_target_buffer_entry* btb_entry = new tagged_branch_target_buffer_entry(_tag,_src,_targ); //SOHUM: added tag info here
 	btb.push_back(btb_entry);
 		// Otherwise, create a new entry for this branch in the BTB
 		// and return the new entry to be initialized elsewhere
@@ -111,7 +115,7 @@ const address_type& _src, const address_type& _targ)
 
 void tagged_branch_target_buffer::print()
 {
-	printf("%12s %12s %20s %6s %6s\n", "SOURCE", "TARGET", "INSTANCES", "TAKEN", "OCC");
+	printf("%12s %11s %12s %20s %6s %6s\n", "PC", "TYPE", "TARGET", "INSTANCES", "TAKEN", "OCC");
 	std::vector<tagged_branch_target_buffer_entry*>:: iterator it;
 	for (it=btb.begin(); it != btb.end(); it++)
 	{
@@ -126,7 +130,8 @@ void tagged_branch_target_buffer::merge_btb(const tagged_branch_target_buffer* c
 	std::vector<tagged_branch_target_buffer_entry*>:: const_iterator it;
 	for (it=child_btb->btb.begin();it!=child_btb->btb.end();++it)
 	{
-		match = find_btb_entry((*it)->get_source(),(*it)->get_target());
+		//TODO: SOHUM: false addes as dummy argument
+		match = find_btb_entry(false,(*it)->get_source(),(*it)->get_target());
 		match->merge(*it);
 	}
 }

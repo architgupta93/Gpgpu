@@ -61,7 +61,10 @@
 void shader_core_ctx::update_btb(address_type& _src, address_type& _targ, bool direction)
 {
 	tagged_branch_target_buffer_entry* match = m_shader_core_btb->find_btb_entry(
-	_src, _targ);
+	false,_src, _targ);
+	//TODO: Sohum: the 'false' argument above was added adhoc
+	//need to solve this
+
 	// Doing this here (and not in the BTB itself) gives you access to the
 	// shader_core_ctx class. If this has to be used in the future to make
 	// branch predictions etc, this should provide a nice handle to use the
@@ -711,7 +714,8 @@ void shader_core_ctx::func_exec_inst( warp_inst_t &inst )
     // update the occupancy table in the shader_core's BTB
     if (pI->get_opcode()==BRA_OP)
     {
-    	tagged_branch_target_buffer_entry* match=m_shader_core_btb->find_btb_entry((address_type) prev_inst.pc, target_pc);
+		//SOHUM: ensure that BRANCH_EXTRN is defined as 1 in abstract_hardware_model.h
+    	tagged_branch_target_buffer_entry* match=m_shader_core_btb->find_btb_entry(prev_inst.is_branch_and_extrinsic(), (address_type) prev_inst.pc, target_pc);
 	int occ = inst.active_count();
 	match->update_occupancy(occ);
     }
