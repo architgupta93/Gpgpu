@@ -778,7 +778,7 @@ void ptx_instruction::set_opcode_and_latency()
 	
 	//SOHUM: At this point the opcodes are set correctly
 	//set the type of branch instruction type
-	assert(op == BRANCH_OP);		//safety check
+	if(op == BRANCH_OP) assert(m_br_type != NOT_BR);		//safety check
 	br_type = m_br_type;
 }
 
