@@ -30,7 +30,7 @@
 #include "ptx.tab.h"
 #include <stdarg.h>
 #include <string>	//SOHUM: Added for string manipulation
-#include <stack>	//Added to maintain and create stack
+#include <queue>	//Added to maintain and create Queue
 
 extern int ptx_error( const char *s );
 extern int ptx_lineno;
@@ -76,7 +76,7 @@ int g_opcode = -1;
 //SOHUM: stack used to input and output branch labels
 //as they appear. Any branch (BRA_OP) must be preceded 
 //by a label
-std::stack<bool> branch_labels;
+std::queue<bool> branch_labels;
 
 std::list<operand_info> g_operands;
 std::list<int> g_options;
@@ -278,7 +278,7 @@ void add_instruction()
 	//SOHUM: Added code to check if this is branch
 	if(g_opcode == BRA_OP){
 		assert(!branch_labels.empty());	//ensure that the branch labels stack is not empty
-		typ  = (branch_labels.top() == BRANCH_INTRN ? INTRN : EXTRN);	//set the label correctly 
+		typ  = (branch_labels.front() == BRANCH_INTRN ? INTRN : EXTRN);	//set the label correctly 
 		branch_labels.pop();	//pop this entry
 	}
    ptx_instruction *i = new ptx_instruction( g_opcode,
