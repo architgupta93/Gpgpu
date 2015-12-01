@@ -25,6 +25,7 @@
 // OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+#include "../cf_utils.h"
 #include "ptx_loader.h"
 #include "ptx_ir.h"
 #include "cuda-sim.h"
@@ -218,9 +219,12 @@ void gpgpu_ptxinfo_load_from_string( const char *p_for_info, unsigned source_num
 #if CUDART_VERSION >= 3000
     snprintf(extra_flags,1024,"--gpu-name=sm_20");
 #endif
-
+    // Control flow analysis: Appending unique tags to the intrinsic/extrisic labels
+    // that have been inserted in the .ptx files using inline assembly
+    FileName new_fname;
+    add_label_ids(new_fname, fname2);
     snprintf(commandline,1024,"$CUDA_INSTALL_PATH/bin/ptxas %s -v %s --output-file  /dev/null 2> %s",
-             extra_flags, fname2, tempfile_ptxinfo);
+             extra_flags, new_fname.name, tempfile_ptxinfo);
     printf("GPGPU-Sim PTX: generating ptxinfo using \"%s\"\n", commandline);
     result = system(commandline);
     if( result != 0 ) {

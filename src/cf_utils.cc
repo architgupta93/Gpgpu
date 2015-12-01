@@ -1,5 +1,64 @@
 #include "cf_utils.h"
+#include <string>
 #include <stdio.h>
+#include <fstream>
+#include <sstream>
+#include <boost/lexical_cast.hpp>
+
+void add_label_ids(FileName& ptx_output_stream_fname, char* fname)
+{
+	std::string line;
+	// Creating a new name for this file that we are going
+	// to generate
+	for (int i=0; i<FNAME_SIZE; i++)
+	{
+		ptx_output_stream_fname.name[i] = fname[i];
+		if (fname[i] == '\0')
+		{
+			if (i<FNAME_SIZE-4)
+			{
+				ptx_output_stream_fname.name[i] = '_';
+				ptx_output_stream_fname.name[i+1] = 'l';
+				ptx_output_stream_fname.name[i+2] = 'a';
+				ptx_output_stream_fname.name[i+3] = 'b';
+				ptx_output_stream_fname.name[i+4] = '\0';
+			}
+			else
+			{
+				ptx_output_stream_fname.name[FNAME_SIZE-5] = '_';
+				ptx_output_stream_fname.name[FNAME_SIZE-4] = 'l';
+				ptx_output_stream_fname.name[FNAME_SIZE-3] = 'a';
+				ptx_output_stream_fname.name[FNAME_SIZE-2] = 'b';
+				ptx_output_stream_fname.name[FNAME_SIZE-1] = '\0';
+			}	
+			break;
+		}
+	}
+	std::ifstream ptx_input_stream;
+	std::ofstream ptx_output_stream;
+	int label_id = 0;
+	ptx_input_stream.open(fname, std::ios::in);
+	ptx_output_stream.open(ptx_output_stream_fname.name, std::ios::out);
+	while (std::getline(ptx_input_stream, line))
+	{
+		if(line == "EXTRN:")
+		{
+			ptx_output_stream << ("EXTRN" + boost::lexical_cast<std::string>(label_id++) + ":\n");;	
+		} 
+		else if (line == "INTRN:")
+		{
+
+			ptx_output_stream << ("INTRN" + boost::lexical_cast<std::string>(label_id++) + ":\n");;	
+		}
+		else
+		{
+			ptx_output_stream << line+"\n";
+		}
+	}	
+	ptx_input_stream.close();
+	ptx_output_stream.close();
+	return;
+}
 
 // Declaring functions for a BTB entry
 

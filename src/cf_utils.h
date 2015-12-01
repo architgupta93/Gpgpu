@@ -10,10 +10,20 @@ typedef unsigned address_type;
 #define TAKEN true
 #define NOT_TAKEN false
 #define WARP_SIZE 32
+#define FNAME_SIZE 1024
 
 //SOHUM: The definitions used for branch types
 #define BRANCH_INTRN 0
 #define BRANCH_EXTRN 1
+
+// Renaming labels to provide uniqu IDs
+
+struct FileName
+{
+	char name[FNAME_SIZE];
+};
+
+void add_label_ids(FileName& ptx_output_stream_fname, char* fname);
 
 class tagged_branch_target_buffer_entry
 {
