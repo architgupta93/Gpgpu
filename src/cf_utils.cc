@@ -7,7 +7,7 @@
 
 // Declaring functions to handle thread status tables
 
-void thread_status_table::set_active_status_pointer(std::vector<thread_active_status> *_root);
+void thread_status_table::set_active_status_pointer(std::vector<thread_active_status> *_root)
 {
 	m_thread_active_status = _root;
 }
@@ -15,12 +15,9 @@ void thread_status_table::set_active_status_pointer(std::vector<thread_active_st
 void thread_status_table::clear()
 {
 	m_thread_active_status = NULL;
-	for (int i=0; i<WARP_SIZE; i++)
-	{
-		m_thread_active_counter[i] = 0;	
-		m_thread_extrinsic_counter[i] = 0;	
-		m_thread_intrinsic_counter[i] = 0;	
-	}
+	m_thread_active_counter = std::vector<unsigned>(WARP_SIZE);	
+	m_thread_extrinsic_counter = std::vector<unsigned>(WARP_SIZE);	
+	m_thread_intrinsic_counter = std::vector<unsigned>(WARP_SIZE);	
 	return;
 }
 
@@ -45,11 +42,12 @@ void thread_status_table::clock()
 				m_thread_intrinsic_counter[i]++;
 				break;
 			default:
+				;
 		}
 	}
 }
 
-void thread_status_table::thread_status_table()
+thread_status_table::thread_status_table()
 {
 	clear();
 }

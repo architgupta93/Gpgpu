@@ -357,10 +357,10 @@ protected:
         address_type m_recvg_pc;
         unsigned long long m_branch_div_cycle;
         stack_entry_type m_type;
-	vector<thread_active_status>* m_current_thread_active_status;
+	std::vector<thread_active_status>* m_current_thread_active_status;
         simt_stack_entry() :
             m_pc(-1), m_calldepth(0), m_active_mask(), m_recvg_pc(-1), m_branch_div_cycle(0), m_type(STACK_ENTRY_TYPE_NORMAL) { 
-		m_current_thread_active_status = new vector<thread_active_status> (MAX_WARP_SIZE, ACTIVE);
+		m_current_thread_active_status = new std::vector<thread_active_status> (MAX_WARP_SIZE, ACTIVE);
 	    };
     };
 

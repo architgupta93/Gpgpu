@@ -29,16 +29,16 @@ class thread_status_table{
 	friend class simt_stack;
 public:
 	thread_status_table();	
-	set_active_status_pointer(std::vector<thread_active_status*> _root);
+	void set_active_status_pointer(std::vector<thread_active_status> *_root);
 	void set_active_status(thread_active_status status, unsigned laneId);
 	void clock();
 	void clear();
 
 private:
-	std::vector<thread_active_status>* m_thread_active_status(WARP_SIZE); 
-    	std::vector<unsigned> m_thread_active_counter(WARP_SIZE);
-    	std::vector<unsigned> m_thread_extrinsic_counter(WARP_SIZE);
-   	std::vector<unsigned> m_thread_intrinsic_counter(WARP_SIZE);
+	std::vector<thread_active_status> *m_thread_active_status;
+    	std::vector<unsigned> m_thread_active_counter;
+    	std::vector<unsigned> m_thread_extrinsic_counter;
+   	std::vector<unsigned> m_thread_intrinsic_counter;
 };
 
 // Renaming labels to provide unique IDs

@@ -603,7 +603,7 @@ void simt_stack::launch( address_type start_pc, const simt_mask_t &active_mask )
     new_stack_entry.m_active_mask = active_mask;
     new_stack_entry.m_type = STACK_ENTRY_TYPE_NORMAL;
     m_stack.push_back(new_stack_entry);
-    m_thread_status_table.set_active_status_pointer(m_stack.back().m_current_active_status);
+    m_thread_status_table.set_active_status_pointer(m_stack.back().m_current_thread_active_status);
 }
 
 const simt_mask_t &simt_stack::get_active_mask() const
@@ -675,13 +675,13 @@ void simt_stack::update( simt_mask_t &thread_done, addr_vector_t &next_pc, addre
     unsigned num_divergent_paths=0;
 
     std::map<address_type,simt_mask_t> divergent_paths;
-    std::map<address_type,vector<thread_active_status> > divergent_path_status;
+    std::map<address_type,std::vector<thread_active_status> > divergent_path_status;
     while (top_active_mask.any()) {
 
         // extract a group of threads with the same next PC among the active threads in the warp
         address_type tmp_next_pc = null_pc;
         simt_mask_t tmp_active_mask;
-	vector<thread_active_status> tmp_active_status (MAX_WARP_SIZE, ACTIVE);
+	std::vector<thread_active_status> tmp_active_status(MAX_WARP_SIZE, ACTIVE);
 	for (int i = 0; i<MAX_WARP_SIZE; i++)
 	{
 		tmp_active_status[i]=(*(m_thread_status_table.m_thread_active_status))[i];
@@ -731,7 +731,7 @@ void simt_stack::update( simt_mask_t &thread_done, addr_vector_t &next_pc, addre
     for(unsigned i=0; i<num_divergent_paths; i++){
     	address_type tmp_next_pc = null_pc;
     	simt_mask_t tmp_active_mask;
-	vector<thread_active_status> tmp_active_status (MAX_WARP_SIZE, ACTIVE);
+	std::vector<thread_active_status> tmp_active_status(MAX_WARP_SIZE, ACTIVE);
     	tmp_active_mask.reset();
     	if(divergent_paths.find(not_taken_pc)!=divergent_paths.end()){
     		assert(i==0);
@@ -776,7 +776,14 @@ void simt_stack::update( simt_mask_t &thread_done, addr_vector_t &next_pc, addre
             if (tmp_next_pc == m_stack.back().m_recvg_pc && m_stack.back().m_type!=STACK_ENTRY_TYPE_CALL){
             	assert(m_stack.back().m_type==STACK_ENTRY_TYPE_NORMAL);
             	m_stack.pop_back();
-		m_thread_status_table.set_active_status_pointer(m_stack.back().m_current_thread_active_status);
+		if (m_stack.size() > 0)
+		{
+			m_thread_status_table.set_active_status_pointer(m_stack.back().m_current_thread_active_status);
+		}
+		else
+		{
+			m_thread_status_table.set_active_status_pointer(NULL);
+		}
             }
             return;
     	}
@@ -826,7 +833,7 @@ void simt_stack::update( simt_mask_t &thread_done, addr_vector_t &next_pc, addre
     }
 }
 
-void core_t::->execute_warp_inst_t(warp_inst_t &inst, unsigned warpId)
+void core_t::execute_warp_inst_t(warp_inst_t &inst, unsigned warpId)
 {
     // Control flow analysis...
     // This is where the execution of each warp instruction takes place
