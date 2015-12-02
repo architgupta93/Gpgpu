@@ -5,6 +5,57 @@
 #include <sstream>
 #include <boost/lexical_cast.hpp>
 
+// Declaring functions to handle thread status tables
+
+void thread_status_table::set_active_status_pointer(std::vector<thread_active_status> *_root);
+{
+	m_thread_active_status = _root;
+}
+
+void thread_status_table::clear()
+{
+	m_thread_active_status = NULL;
+	for (int i=0; i<WARP_SIZE; i++)
+	{
+		m_thread_active_counter[i] = 0;	
+		m_thread_extrinsic_counter[i] = 0;	
+		m_thread_intrinsic_counter[i] = 0;	
+	}
+	return;
+}
+
+void thread_status_table::set_active_status(thread_active_status status, unsigned laneId)
+{
+	(*m_thread_active_status)[laneId] = status;
+}
+
+void thread_status_table::clock()
+{
+	for (int i=0; i<WARP_SIZE; i++)
+	{
+		switch((*m_thread_active_status)[i])
+		{
+			case ACTIVE:
+				m_thread_active_counter[i]++;
+				break;
+			case INACTIVE_EXTRINSIC:
+				m_thread_extrinsic_counter[i]++;
+				break;
+			case INACTIVE_INTRINSIC:
+				m_thread_intrinsic_counter[i]++;
+				break;
+			default:
+		}
+	}
+}
+
+void thread_status_table::thread_status_table()
+{
+	clear();
+}
+
+// Manipulating input ptx files
+
 void add_label_ids(FileName& ptx_output_stream_fname, char* fname)
 {
 	std::string line;

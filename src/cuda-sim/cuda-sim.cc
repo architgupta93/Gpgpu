@@ -1246,6 +1246,15 @@ void ptx_thread_info::ptx_exec_inst( warp_inst_t &inst, unsigned lane_id)
             shader_core_ctx* t_core = (shader_core_ctx*) get_core();
 			bool t = inst.is_branch_and_extrinsic();	//TODO: Sohum: Confirm that the tag has to be loaded from inst_t
             t_core->update_btb(t, inst.pc, target_pc, NOT_TAKEN);
+	    thread_active_status new_status = t ? INACTIVE_EXTRINSIC : INACTIVE_INTRINSIC;
+	    if (inst.status != ACTIVE)
+	    {	
+		assert(inst.status == new_status);	// all the active threads in the warp should be providing the same status
+	    }
+	    else
+	    {
+		inst.status = new_status;
+	    }
       }
 
       // Code here to check if the opcode is BRA_OP and to increment the "instances" field in the
@@ -1269,6 +1278,15 @@ void ptx_thread_info::ptx_exec_inst( warp_inst_t &inst, unsigned lane_id)
             shader_core_ctx* t_core = (shader_core_ctx*) get_core();
 			bool t = inst.is_branch_and_extrinsic();	//TODO: Sohum: Confirm that the tag has to be loaded from inst_t
             t_core->update_btb(t, inst.pc, target_pc, TAKEN);
+	    thread_active_status new_status = t ? INACTIVE_EXTRINSIC : INACTIVE_INTRINSIC;
+	    if (inst.status != ACTIVE)
+	    {	
+		assert(inst.status == new_status);	// all the active threads in the warp should be providing the same status
+	    }
+	    else
+	    {
+		inst.status = new_status;
+	    }
       }
 
       switch ( pI->get_opcode() ) {

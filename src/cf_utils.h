@@ -16,7 +16,32 @@ typedef unsigned address_type;
 #define BRANCH_INTRN 0
 #define BRANCH_EXTRN 1
 
-// Renaming labels to provide uniqu IDs
+enum thread_active_status{
+	ACTIVE,
+	INACTIVE_EXTRINSIC,
+	INACTIVE_INTRINSIC
+};
+
+// Structs/classes to define the inactive counters for different threads
+
+class thread_status_table{
+	friend class warp_inst_t;
+	friend class simt_stack;
+public:
+	thread_status_table();	
+	set_active_status_pointer(std::vector<thread_active_status*> _root);
+	void set_active_status(thread_active_status status, unsigned laneId);
+	void clock();
+	void clear();
+
+private:
+	std::vector<thread_active_status>* m_thread_active_status(WARP_SIZE); 
+    	std::vector<unsigned> m_thread_active_counter(WARP_SIZE);
+    	std::vector<unsigned> m_thread_extrinsic_counter(WARP_SIZE);
+   	std::vector<unsigned> m_thread_intrinsic_counter(WARP_SIZE);
+};
+
+// Renaming labels to provide unique IDs
 
 struct FileName
 {

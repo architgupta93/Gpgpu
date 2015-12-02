@@ -591,6 +591,7 @@ simt_stack::simt_stack( unsigned wid, unsigned warpSize)
 void simt_stack::reset()
 {
     m_stack.clear();
+    m_thread_status_table.clear();
 }
 
 void simt_stack::launch( address_type start_pc, const simt_mask_t &active_mask )
@@ -602,6 +603,7 @@ void simt_stack::launch( address_type start_pc, const simt_mask_t &active_mask )
     new_stack_entry.m_active_mask = active_mask;
     new_stack_entry.m_type = STACK_ENTRY_TYPE_NORMAL;
     m_stack.push_back(new_stack_entry);
+    m_thread_status_table.set_active_status_pointer(m_stack.back().m_current_active_status);
 }
 
 const simt_mask_t &simt_stack::get_active_mask() const
@@ -650,8 +652,12 @@ void simt_stack::print (FILE *fout) const
     }
 }
 
-void simt_stack::update( simt_mask_t &thread_done, addr_vector_t &next_pc, address_type recvg_pc, op_type next_inst_op,unsigned next_inst_size, address_type next_inst_pc )
+void simt_stack::update( simt_mask_t &thread_done, addr_vector_t &next_pc, address_type recvg_pc, op_type next_inst_op,unsigned next_inst_size, address_type next_inst_pc, thread_active_status _status )
 {
+    // ARCHIT: In the new function description, I've added the '_status' variable to indicate
+    // the nature of the branch that was encountered by the warp in the last cycle. Since, all
+    // the active threads should have encountered the same branch, one member of thread_active_status
+    // type should be enough
     assert(m_stack.size() > 0);
 
     assert( next_pc.size() == m_warp_size );
@@ -669,11 +675,20 @@ void simt_stack::update( simt_mask_t &thread_done, addr_vector_t &next_pc, addre
     unsigned num_divergent_paths=0;
 
     std::map<address_type,simt_mask_t> divergent_paths;
+    std::map<address_type,vector<thread_active_status> > divergent_path_status;
     while (top_active_mask.any()) {
 
         // extract a group of threads with the same next PC among the active threads in the warp
         address_type tmp_next_pc = null_pc;
         simt_mask_t tmp_active_mask;
+	vector<thread_active_status> tmp_active_status (MAX_WARP_SIZE, ACTIVE);
+	for (int i = 0; i<MAX_WARP_SIZE; i++)
+	{
+		tmp_active_status[i]=(*(m_thread_status_table.m_thread_active_status))[i];
+		// ARCHIT: Inactive threads retain the active status from the current
+		// top of pdom stack. Those which are active, are modified later in the code
+		// TODO: Check if this part of the code is working correctly with a small example
+	}
         for (int i = m_warp_size - 1; i >= 0; i--) {
             if ( top_active_mask.test(i) ) { // is this thread active?
                 if (thread_done.test(i)) {
@@ -681,11 +696,21 @@ void simt_stack::update( simt_mask_t &thread_done, addr_vector_t &next_pc, addre
                 } else if (tmp_next_pc == null_pc) {
                     tmp_next_pc = next_pc[i];
                     tmp_active_mask.set(i);
+		    tmp_active_status[i] = ACTIVE;
                     top_active_mask.reset(i);
                 } else if (tmp_next_pc == next_pc[i]) {
                     tmp_active_mask.set(i);
+		    tmp_active_status[i] = ACTIVE;
                     top_active_mask.reset(i);
-                }
+                } else {
+		    tmp_active_status[i] = _status;
+		}
+		// ARCHIT: Look at all the threads that were active in the previous cycle. We are going to create
+		// two groups from these threads ub this loop. One of the groups will have a partition P1 of the 
+		// set of active threads and the other will have a partition P2. Lets call the set of all active 
+		// threads Pa. Clearly, Pa = P1 U P2 (P1, P2 are disjoint). The active status of all the threads 
+		// in Pa - P1 should be flagged with '_status' and the rest should be flagged active. Same should
+		// be repeated for Pa - P2 as well.
             }
         }
 
@@ -695,6 +720,8 @@ void simt_stack::update( simt_mask_t &thread_done, addr_vector_t &next_pc, addre
         }
 
         divergent_paths[tmp_next_pc]=tmp_active_mask;
+	divergent_path_status[tmp_next_pc]=tmp_active_status;
+	// This is done to ensure that the active status entry in m_stack is in sync with the active_flag entries
         num_divergent_paths++;
     }
 
@@ -704,17 +731,22 @@ void simt_stack::update( simt_mask_t &thread_done, addr_vector_t &next_pc, addre
     for(unsigned i=0; i<num_divergent_paths; i++){
     	address_type tmp_next_pc = null_pc;
     	simt_mask_t tmp_active_mask;
+	vector<thread_active_status> tmp_active_status (MAX_WARP_SIZE, ACTIVE);
     	tmp_active_mask.reset();
     	if(divergent_paths.find(not_taken_pc)!=divergent_paths.end()){
     		assert(i==0);
     		tmp_next_pc=not_taken_pc;
     		tmp_active_mask=divergent_paths[tmp_next_pc];
+		std::copy(divergent_path_status[tmp_next_pc].begin(), divergent_path_status[tmp_next_pc].end(), tmp_active_status.begin());
     		divergent_paths.erase(tmp_next_pc);
+		divergent_path_status.erase(tmp_next_pc);
     	}else{
     		std::map<address_type,simt_mask_t>:: iterator it=divergent_paths.begin();
     		tmp_next_pc=it->first;
     		tmp_active_mask=divergent_paths[tmp_next_pc];
+		std::copy(divergent_path_status[tmp_next_pc].begin(), divergent_path_status[tmp_next_pc].end(), tmp_active_status.begin());
     		divergent_paths.erase(tmp_next_pc);
+		divergent_path_status.erase(tmp_next_pc);
     	}
 
         // HANDLE THE SPECIAL CASES FIRST
@@ -727,6 +759,8 @@ void simt_stack::update( simt_mask_t &thread_done, addr_vector_t &next_pc, addre
     		new_stack_entry.m_active_mask = tmp_active_mask;
     		new_stack_entry.m_branch_div_cycle = gpu_sim_cycle+gpu_tot_sim_cycle;
     		new_stack_entry.m_type = STACK_ENTRY_TYPE_CALL;
+		std::copy(tmp_active_status.begin(), tmp_active_status.end(), new_stack_entry.m_current_thread_active_status->begin());
+		m_thread_status_table.set_active_status_pointer(new_stack_entry.m_current_thread_active_status);
     		m_stack.push_back(new_stack_entry);
     		return;
     	}else if(next_inst_op == RET_OPS && top_type==STACK_ENTRY_TYPE_CALL){
@@ -736,10 +770,13 @@ void simt_stack::update( simt_mask_t &thread_done, addr_vector_t &next_pc, addre
 
     		assert(m_stack.size() > 0);
     		m_stack.back().m_pc=tmp_next_pc;// set the PC of the stack top entry to return PC from  the call stack;
+		m_thread_status_table.set_active_status_pointer(m_stack.back().m_current_thread_active_status);
+		
             // Check if the New top of the stack is reconverging
             if (tmp_next_pc == m_stack.back().m_recvg_pc && m_stack.back().m_type!=STACK_ENTRY_TYPE_CALL){
             	assert(m_stack.back().m_type==STACK_ENTRY_TYPE_NORMAL);
             	m_stack.pop_back();
+		m_thread_status_table.set_active_status_pointer(m_stack.back().m_current_thread_active_status);
             }
             return;
     	}
@@ -760,6 +797,7 @@ void simt_stack::update( simt_mask_t &thread_done, addr_vector_t &next_pc, addre
                 m_stack.back().m_branch_div_cycle = gpu_sim_cycle+gpu_tot_sim_cycle;
 
                 m_stack.push_back(simt_stack_entry());
+		m_thread_status_table.set_active_status_pointer(m_stack.back().m_current_thread_active_status);
             }
         }
 
@@ -777,17 +815,18 @@ void simt_stack::update( simt_mask_t &thread_done, addr_vector_t &next_pc, addre
         }
 
         m_stack.push_back(simt_stack_entry());
+	m_thread_status_table.set_active_status_pointer(m_stack.back().m_current_thread_active_status);
     }
     assert(m_stack.size() > 0);
     m_stack.pop_back();
-
+    m_thread_status_table.set_active_status_pointer(m_stack.back().m_current_thread_active_status);
 
     if (warp_diverged) {
         ptx_file_line_stats_add_warp_divergence(top_pc, 1); 
     }
 }
 
-void core_t::execute_warp_inst_t(warp_inst_t &inst, unsigned warpId)
+void core_t::->execute_warp_inst_t(warp_inst_t &inst, unsigned warpId)
 {
     // Control flow analysis...
     // This is where the execution of each warp instruction takes place
@@ -829,7 +868,7 @@ void core_t::updateSIMTStack(unsigned warpId, warp_inst_t * inst)
             next_pc.push_back( m_thread[wtid+i]->get_pc() );
         }
     }
-    m_simt_stack[warpId]->update(thread_done,next_pc,inst->reconvergence_pc, inst->op,inst->isize,inst->pc);
+    m_simt_stack[warpId]->update(thread_done,next_pc,inst->reconvergence_pc, inst->op,inst->isize,inst->pc, inst->status);
 }
 
 //! Get the warp to be executed using the data taken form the SIMT stack
