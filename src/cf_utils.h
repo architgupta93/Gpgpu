@@ -9,6 +9,7 @@ typedef unsigned address_type;
 
 #define TAKEN true
 #define NOT_TAKEN false
+#define INVALID_THREAD_ACTIVE_STATUS 0
 #define WARP_SIZE 32
 #define FNAME_SIZE 1024
 
@@ -24,15 +25,23 @@ enum thread_active_status{
 
 // Structs/classes to define the inactive counters for different threads
 
+template <class T>
+T vector_sum(const std::vector<T>& vec);
+
 class thread_status_table{
 	friend class warp_inst_t;
 	friend class simt_stack;
 public:
 	thread_status_table();	
+	unsigned get_active_count(){return vector_sum(m_thread_active_counter); };
+	unsigned get_extrinsic_count(){ return vector_sum(m_thread_extrinsic_counter); };
+	unsigned get_intrinsic_count(){ return vector_sum(m_thread_intrinsic_counter); };
+	void merge_status_table(const thread_status_table& _table);
 	void set_active_status_pointer(std::vector<thread_active_status> *_root);
 	void set_active_status(thread_active_status status, unsigned laneId);
 	void clock();
 	void clear();
+	void print();
 
 private:
 	std::vector<thread_active_status> *m_thread_active_status;

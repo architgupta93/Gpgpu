@@ -1976,6 +1976,14 @@ void shader_core_ctx::register_cta_thread_exit( unsigned cta_num )
 	  print_btb();
 			printf("\n\n");
 	  m_kernel->merge_btb(m_shader_core_btb);
+	  printf("%9s, %12s, %12s, %12s\n", "WARP NO", "ACTIVE", "EXTRINSIC", "INTRINSIC");
+	  for (int i=0; i<m_config->max_warps_per_shader; i++)
+	  {
+		m_kernel->merge_thread_status_table(m_simt_stack[i]->m_thread_status_table);
+		printf("Warp %4d:", i);
+		m_simt_stack[i]->m_thread_status_table.print();
+		m_simt_stack[i]->m_thread_status_table.clear();
+	  }
 	  m_shader_core_btb->flush();
           if( m_kernel->no_more_ctas_to_run() ) {
               if( !m_kernel->running() ) {
@@ -1986,6 +1994,10 @@ void shader_core_ctx::register_cta_thread_exit( unsigned cta_num )
 		  m_kernel->print_btb();
 			printf("\n\n");
 		  m_kernel->flush_btb();
+		  printf("Thread stats:\n");
+	  printf("%12s, %12s, %12s\n", "ACTIVE", "EXTRINSIC", "INTRINSIC");
+		  m_kernel->print_thread_status_table();
+		  m_kernel->flush_thread_status_table();
               }
           }
           m_kernel=NULL;

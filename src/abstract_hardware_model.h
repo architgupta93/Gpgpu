@@ -256,14 +256,21 @@ public:
    {
 	m_kernel_btb->merge_btb(child_btb);
    }
+   void merge_thread_status_table(const thread_status_table& _table)
+   {
+	m_kernel_thread_status_table->merge_status_table(_table);
+   }
    void print_btb() { m_kernel_btb->print(); }
    void flush_btb() { m_kernel_btb->flush(); }
+   void print_thread_status_table() { m_kernel_thread_status_table->print(); }
+   void flush_thread_status_table() { m_kernel_thread_status_table->clear(); }
 private:
    kernel_info_t( const kernel_info_t & ); // disable copy constructor
    void operator=( const kernel_info_t & ); // disable copy operator
 
    // Control flow analysis related members
    tagged_branch_target_buffer* m_kernel_btb;   
+   thread_status_table* m_kernel_thread_status_table;
 
    class function_info *m_kernel_entry;
 
@@ -339,11 +346,11 @@ public:
     void     get_pdom_stack_top_info( unsigned *pc, unsigned *rpc ) const;
     unsigned get_rp() const;
     void     print(FILE*fp) const;
+    thread_status_table m_thread_status_table;
 
 protected:
     unsigned m_warp_id;
     unsigned m_warp_size;
-    thread_status_table m_thread_status_table;
 
     enum stack_entry_type {
         STACK_ENTRY_TYPE_NORMAL = 0,

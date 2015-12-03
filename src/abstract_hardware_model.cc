@@ -568,12 +568,15 @@ kernel_info_t::kernel_info_t( dim3 gridDim, dim3 blockDim, class function_info *
     m_uid = m_next_uid++;
     m_param_mem = new memory_space_impl<8192>("param",64*1024);
     m_kernel_btb = new tagged_branch_target_buffer();	
+    m_kernel_thread_status_table = new thread_status_table();
 }
 
 kernel_info_t::~kernel_info_t()
 {
     assert( m_active_threads.empty() );
     delete m_param_mem;
+    delete m_kernel_btb;
+    delete m_kernel_thread_status_table;
 }
 
 std::string kernel_info_t::name() const
@@ -659,6 +662,7 @@ void simt_stack::update( simt_mask_t &thread_done, addr_vector_t &next_pc, addre
     // the active threads should have encountered the same branch, one member of thread_active_status
     // type should be enough
     assert(m_stack.size() > 0);
+    m_thread_status_table.clock();
 
     assert( next_pc.size() == m_warp_size );
 
@@ -780,10 +784,6 @@ void simt_stack::update( simt_mask_t &thread_done, addr_vector_t &next_pc, addre
 		{
 			m_thread_status_table.set_active_status_pointer(m_stack.back().m_current_thread_active_status);
 		}
-		else
-		{
-			m_thread_status_table.set_active_status_pointer(NULL);
-		}
             }
             return;
     	}
@@ -826,7 +826,10 @@ void simt_stack::update( simt_mask_t &thread_done, addr_vector_t &next_pc, addre
     }
     assert(m_stack.size() > 0);
     m_stack.pop_back();
-    m_thread_status_table.set_active_status_pointer(m_stack.back().m_current_thread_active_status);
+    if (m_stack.size() > 0)
+    {	
+    	m_thread_status_table.set_active_status_pointer(m_stack.back().m_current_thread_active_status);
+    }
 
     if (warp_diverged) {
         ptx_file_line_stats_add_warp_divergence(top_pc, 1); 

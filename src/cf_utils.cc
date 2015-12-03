@@ -7,6 +7,33 @@
 
 // Declaring functions to handle thread status tables
 
+void thread_status_table::print()
+{
+	printf("%12d, %12d, %12d\n", get_active_count(), get_extrinsic_count(), get_intrinsic_count());
+}
+
+template <class T>
+T vector_sum(const std::vector<T>& vec)
+{
+	T sum = 0;
+	typename std::vector<T>::const_iterator it;
+	for (it=vec.begin(); it!=vec.end(); it++)
+	{
+		sum += *it;
+	}
+	return sum;
+}
+
+void thread_status_table::merge_status_table(const thread_status_table& _table)
+{
+	for (unsigned int i=0; i<WARP_SIZE; i++)
+	{
+		m_thread_active_counter[i] += _table.m_thread_active_counter[i];
+		m_thread_extrinsic_counter[i] += _table.m_thread_extrinsic_counter[i];
+		m_thread_intrinsic_counter[i] += _table.m_thread_intrinsic_counter[i];	
+	}
+}
+
 void thread_status_table::set_active_status_pointer(std::vector<thread_active_status> *_root)
 {
 	m_thread_active_status = _root;
@@ -28,7 +55,7 @@ void thread_status_table::set_active_status(thread_active_status status, unsigne
 
 void thread_status_table::clock()
 {
-	for (int i=0; i<WARP_SIZE; i++)
+	for (unsigned int i=0; i<WARP_SIZE; i++)
 	{
 		switch((*m_thread_active_status)[i])
 		{
@@ -42,6 +69,7 @@ void thread_status_table::clock()
 				m_thread_intrinsic_counter[i]++;
 				break;
 			default:
+				assert(INVALID_THREAD_ACTIVE_STATUS==1);	// Any other number means something is wrong
 				;
 		}
 	}
