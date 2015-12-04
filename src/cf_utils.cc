@@ -7,6 +7,16 @@
 
 // Declaring functions to handle thread status tables
 
+void thread_status_table::print_status()
+{
+	printf("%1d", (*m_thread_active_status)[0]);
+	for (unsigned int i=1; i<WARP_SIZE; i++)
+	{
+		printf(", %1d", (*m_thread_active_status)[i]);
+	}	
+	printf("\n");
+}
+
 void thread_status_table::print()
 {
 	printf("%12d, %12d, %12d\n", get_active_count(), get_extrinsic_count(), get_intrinsic_count());

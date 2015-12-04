@@ -606,7 +606,6 @@ void simt_stack::launch( address_type start_pc, const simt_mask_t &active_mask )
     new_stack_entry.m_active_mask = active_mask;
     new_stack_entry.m_type = STACK_ENTRY_TYPE_NORMAL;
     m_stack.push_back(new_stack_entry);
-    m_thread_status_table.set_active_status_pointer(m_stack.back().m_current_thread_active_status);
 }
 
 const simt_mask_t &simt_stack::get_active_mask() const
@@ -662,6 +661,7 @@ void simt_stack::update( simt_mask_t &thread_done, addr_vector_t &next_pc, addre
     // the active threads should have encountered the same branch, one member of thread_active_status
     // type should be enough
     assert(m_stack.size() > 0);
+    m_thread_status_table.set_active_status_pointer(m_stack.back().m_current_thread_active_status);
     m_thread_status_table.clock();
 
     assert( next_pc.size() == m_warp_size );
@@ -669,6 +669,9 @@ void simt_stack::update( simt_mask_t &thread_done, addr_vector_t &next_pc, addre
     simt_mask_t  top_active_mask = m_stack.back().m_active_mask;
     address_type top_recvg_pc = m_stack.back().m_recvg_pc;
     address_type top_pc = m_stack.back().m_pc; // the pc of the instruction just executed
+    std::vector<thread_active_status>* top_active_status = new std::vector<thread_active_status> (MAX_WARP_SIZE);
+    std::copy(m_stack.back().m_current_thread_active_status->begin(), m_stack.back().m_current_thread_active_status->end(),
+	top_active_status->begin());
     stack_entry_type top_type = m_stack.back().m_type;
     assert(top_pc==next_inst_pc);
     assert(top_active_mask.any());
@@ -686,15 +689,15 @@ void simt_stack::update( simt_mask_t &thread_done, addr_vector_t &next_pc, addre
         address_type tmp_next_pc = null_pc;
         simt_mask_t tmp_active_mask;
 	std::vector<thread_active_status> tmp_active_status(MAX_WARP_SIZE, ACTIVE);
-	for (int i = 0; i<MAX_WARP_SIZE; i++)
-	{
-		tmp_active_status[i]=(*(m_thread_status_table.m_thread_active_status))[i];
-		// ARCHIT: Inactive threads retain the active status from the current
-		// top of pdom stack. Those which are active, are modified later in the code
-		// TODO: Check if this part of the code is working correctly with a small example
-	}
+	std::copy(top_active_status->begin(), top_active_status->end(),
+		tmp_active_status.begin());
+	// ARCHIT: Inactive threads retain the active status from the current
+	// top of pdom stack. Those which are active, are modified later in the code
+	// TODO: Check if this part of the code is working correctly with a small example
         for (int i = m_warp_size - 1; i >= 0; i--) {
             if ( top_active_mask.test(i) ) { // is this thread active?
+		//assert(tmp_active_status[i]==ACTIVE); // Check that the thread status table and 
+						      // active mask are consistent
                 if (thread_done.test(i)) {
                     top_active_mask.reset(i); // remove completed thread from active mask
                 } else if (tmp_next_pc == null_pc) {
@@ -764,7 +767,6 @@ void simt_stack::update( simt_mask_t &thread_done, addr_vector_t &next_pc, addre
     		new_stack_entry.m_branch_div_cycle = gpu_sim_cycle+gpu_tot_sim_cycle;
     		new_stack_entry.m_type = STACK_ENTRY_TYPE_CALL;
 		std::copy(tmp_active_status.begin(), tmp_active_status.end(), new_stack_entry.m_current_thread_active_status->begin());
-		m_thread_status_table.set_active_status_pointer(new_stack_entry.m_current_thread_active_status);
     		m_stack.push_back(new_stack_entry);
     		return;
     	}else if(next_inst_op == RET_OPS && top_type==STACK_ENTRY_TYPE_CALL){
@@ -774,16 +776,11 @@ void simt_stack::update( simt_mask_t &thread_done, addr_vector_t &next_pc, addre
 
     		assert(m_stack.size() > 0);
     		m_stack.back().m_pc=tmp_next_pc;// set the PC of the stack top entry to return PC from  the call stack;
-		m_thread_status_table.set_active_status_pointer(m_stack.back().m_current_thread_active_status);
 		
             // Check if the New top of the stack is reconverging
             if (tmp_next_pc == m_stack.back().m_recvg_pc && m_stack.back().m_type!=STACK_ENTRY_TYPE_CALL){
             	assert(m_stack.back().m_type==STACK_ENTRY_TYPE_NORMAL);
             	m_stack.pop_back();
-		if (m_stack.size() > 0)
-		{
-			m_thread_status_table.set_active_status_pointer(m_stack.back().m_current_thread_active_status);
-		}
             }
             return;
     	}
@@ -804,7 +801,6 @@ void simt_stack::update( simt_mask_t &thread_done, addr_vector_t &next_pc, addre
                 m_stack.back().m_branch_div_cycle = gpu_sim_cycle+gpu_tot_sim_cycle;
 
                 m_stack.push_back(simt_stack_entry());
-		m_thread_status_table.set_active_status_pointer(m_stack.back().m_current_thread_active_status);
             }
         }
 
@@ -814,6 +810,7 @@ void simt_stack::update( simt_mask_t &thread_done, addr_vector_t &next_pc, addre
         // update the current top of pdom stack
         m_stack.back().m_pc = tmp_next_pc;
         m_stack.back().m_active_mask = tmp_active_mask;
+	std::copy(tmp_active_status.begin(), tmp_active_status.end(), m_stack.back().m_current_thread_active_status->begin());
         if (warp_diverged) {
             m_stack.back().m_calldepth = 0;
             m_stack.back().m_recvg_pc = new_recvg_pc;
@@ -822,17 +819,17 @@ void simt_stack::update( simt_mask_t &thread_done, addr_vector_t &next_pc, addre
         }
 
         m_stack.push_back(simt_stack_entry());
-	m_thread_status_table.set_active_status_pointer(m_stack.back().m_current_thread_active_status);
     }
     assert(m_stack.size() > 0);
     m_stack.pop_back();
-    if (m_stack.size() > 0)
-    {	
-    	m_thread_status_table.set_active_status_pointer(m_stack.back().m_current_thread_active_status);
-    }
-
     if (warp_diverged) {
         ptx_file_line_stats_add_warp_divergence(top_pc, 1); 
+	if (m_stack.size() > 0)
+	{
+    		printf("Branch Status: %1d\n", _status);
+	        m_thread_status_table.set_active_status_pointer(m_stack.back().m_current_thread_active_status);
+	        m_thread_status_table.print_status();
+	}
     }
 }
 

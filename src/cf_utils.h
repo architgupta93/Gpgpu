@@ -33,6 +33,7 @@ class thread_status_table{
 	friend class simt_stack;
 public:
 	thread_status_table();	
+	void print_status();
 	unsigned get_active_count(){return vector_sum(m_thread_active_counter); };
 	unsigned get_extrinsic_count(){ return vector_sum(m_thread_extrinsic_counter); };
 	unsigned get_intrinsic_count(){ return vector_sum(m_thread_intrinsic_counter); };
