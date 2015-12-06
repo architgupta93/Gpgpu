@@ -688,16 +688,38 @@ void simt_stack::update( simt_mask_t &thread_done, addr_vector_t &next_pc, addre
         // extract a group of threads with the same next PC among the active threads in the warp
         address_type tmp_next_pc = null_pc;
         simt_mask_t tmp_active_mask;
-	std::vector<thread_active_status> tmp_active_status(MAX_WARP_SIZE, ACTIVE);
-	std::copy(top_active_status->begin(), top_active_status->end(),
-		tmp_active_status.begin());
-	// ARCHIT: Inactive threads retain the active status from the current
-	// top of pdom stack. Those which are active, are modified later in the code
+	std::vector<thread_active_status> tmp_active_status(MAX_WARP_SIZE, _status);	// All the threads that have been deactivated
+											// in this clock should have their status set
+											// to _status
+	// In case of warp divergence, there will be 2 paths. The existing code resets the top_active_mask of 1 of the paths as is tags 
+	// it. So, the next time these threads are encountered, they are not touched at all. The default state of all the threads that 
+	// were active in the last cycle should therefore be _status and the threads that are meant to be active in this next warp
+	// execution should be marked active
+	
+		//std::copy(top_active_status->begin(), top_active_status->end(),
+		//	tmp_active_status.begin());
+		//	THIS DOES NOT WORK CORRECTLY
+	
+	// Insert Code here
+	for (unsigned i=0; i<MAX_WARP_SIZE; i++)
+	{
+		if((*top_active_status)[i] != ACTIVE)
+		{
+			tmp_active_status[i] = (*top_active_status)[i];
+		}
+	}
+	
+	// ARCHIT:  Previously inactive threads are passed the tag from the current PDOM
+	// TOS. The threads which are active have their tag set to _status. It will be reset
+	// to active (or left as _status if the thread is not marked in a group) in the code
 	// TODO: Check if this part of the code is working correctly with a small example
         for (int i = m_warp_size - 1; i >= 0; i--) {
             if ( top_active_mask.test(i) ) { // is this thread active?
-		//assert(tmp_active_status[i]==ACTIVE); // Check that the thread status table and 
-						      // active mask are consistent
+		assert((*top_active_status)[i]==ACTIVE);// Ensure that the active mask
+							// and the active status are in sync
+		assert(tmp_active_status[i]==_status);	// Ensure that the deafult value for 
+							// the new status is that of the branch 
+						
                 if (thread_done.test(i)) {
                     top_active_mask.reset(i); // remove completed thread from active mask
                 } else if (tmp_next_pc == null_pc) {
@@ -709,9 +731,7 @@ void simt_stack::update( simt_mask_t &thread_done, addr_vector_t &next_pc, addre
                     tmp_active_mask.set(i);
 		    tmp_active_status[i] = ACTIVE;
                     top_active_mask.reset(i);
-                } else {
-		    tmp_active_status[i] = _status;
-		}
+                } 
 		// ARCHIT: Look at all the threads that were active in the previous cycle. We are going to create
 		// two groups from these threads ub this loop. One of the groups will have a partition P1 of the 
 		// set of active threads and the other will have a partition P2. Lets call the set of all active 
@@ -794,6 +814,7 @@ void simt_stack::update( simt_mask_t &thread_done, addr_vector_t &next_pc, addre
         // if this entry does not include thread from the warp, divergence occurs
         if ((num_divergent_paths>1) && !warp_diverged ) {
             warp_diverged = true;
+    	    printf("Branch Status: %1d\n", _status);
             // modify the existing top entry into a reconvergence entry in the pdom stack
             new_recvg_pc = recvg_pc;
             if (new_recvg_pc != top_recvg_pc) {
@@ -814,6 +835,9 @@ void simt_stack::update( simt_mask_t &thread_done, addr_vector_t &next_pc, addre
         if (warp_diverged) {
             m_stack.back().m_calldepth = 0;
             m_stack.back().m_recvg_pc = new_recvg_pc;
+	    m_thread_status_table.set_active_status_pointer(m_stack.back().m_current_thread_active_status);
+	    printf("Branch-%2d: ", i);
+	    m_thread_status_table.print_status();
         } else {
             m_stack.back().m_recvg_pc = top_recvg_pc;
         }
@@ -824,12 +848,11 @@ void simt_stack::update( simt_mask_t &thread_done, addr_vector_t &next_pc, addre
     m_stack.pop_back();
     if (warp_diverged) {
         ptx_file_line_stats_add_warp_divergence(top_pc, 1); 
-	if (m_stack.size() > 0)
-	{
-    		printf("Branch Status: %1d\n", _status);
-	        m_thread_status_table.set_active_status_pointer(m_stack.back().m_current_thread_active_status);
-	        m_thread_status_table.print_status();
-	}
+//	if (m_stack.size() > 0)
+//	{
+//	        m_thread_status_table.set_active_status_pointer(m_stack.back().m_current_thread_active_status);
+//	        m_thread_status_table.print_status();
+//	}
     }
 }
 
