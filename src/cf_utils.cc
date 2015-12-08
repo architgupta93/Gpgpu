@@ -126,16 +126,18 @@ void add_label_ids(FileName& ptx_output_stream_fname, char* fname)
 	int label_id = 0;
 	ptx_input_stream.open(fname, std::ios::in);
 	ptx_output_stream.open(ptx_output_stream_fname.name, std::ios::out);
+	const std::string extrn_tag="EXTRN:";
+	const std::string intrn_tag="INTRN:";
 	while (std::getline(ptx_input_stream, line))
 	{
-		if(line == "EXTRN:")
+		if(line.find(extrn_tag) != std::string::npos)
 		{
-			ptx_output_stream << ("EXTRN" + boost::lexical_cast<std::string>(label_id++) + ":\n");;	
+			ptx_output_stream << ("EXTRN" + boost::lexical_cast<std::string>(++label_id) + ":\n");;	
 		} 
-		else if (line == "INTRN:")
+		else if (line.find(intrn_tag) != std::string::npos)
 		{
 
-			ptx_output_stream << ("INTRN" + boost::lexical_cast<std::string>(label_id++) + ":\n");;	
+			ptx_output_stream << ("INTRN" + boost::lexical_cast<std::string>(++label_id) + ":\n");;	
 		}
 		else
 		{

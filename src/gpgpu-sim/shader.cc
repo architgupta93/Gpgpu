@@ -692,30 +692,52 @@ void shader_core_ctx::func_exec_inst( warp_inst_t &inst )
     // before it is executed using execute_warp_inst_t(inst), otherwise, the
     // PC value will get incremented and it will be diffficult to trace back
     // the original instruction
-    unsigned t0_tid = m_warp_size*(inst.warp_id());
-    ptx_thread_info* t0 = m_thread[t0_tid];
-    const ptx_instruction *pI = (t0->func_info())->get_instruction(inst.pc);
-    warp_inst_t prev_inst = inst;
+    unsigned t0_tid = (unsigned (-1));
+    const ptx_instruction *pI=NULL;
+    warp_inst_t prev_inst;
     address_type target_pc;
-    if (pI->get_opcode()==BRA_OP)
+    for (unsigned t=0; t < m_warp_size; t++)
     {
-            const operand_info &target  = pI->dst();
-            target_pc = (address_type) t0->get_operand_value(target, target, (unsigned) 304, t0, 1);
-				// 304 is not a magical number. It comes from the file
-				// ptx.tab.c in gpgpu/cuobjdump_to_ptxplus
-				// U32_TYPE = 304
+	if (inst.active(t))
+	{
+    		t0_tid=m_warp_size*(inst.warp_id())+t;
+		break;
+	}
+    } 
+    
+    if (t0_tid != (unsigned (-1)))
+    {
+	ptx_thread_info* t0 = m_thread[t0_tid];
+        pI = (t0->func_info())->get_instruction(inst.pc);
+        prev_inst = inst;
+        if (pI->get_opcode()==BRA_OP)
+        {
+        	const operand_info &target  = pI->dst();
+        	target_pc = (address_type) t0->get_operand_value(target, target, (unsigned) 304, t0, 1);
+					// 304 is not a magical number. It comes from the file
+					// ptx.tab.c in gpgpu/cuobjdump_to_ptxplus
+					// U32_TYPE = 304
+        }
     }
 
     execute_warp_inst_t(inst);	// Original code
 
     // Now that all the instructions in this warp have been executed, we can
     // update the occupancy table in the shader_core's BTB
-    if (pI->get_opcode()==BRA_OP)
+    if (pI != NULL)
     {
-		//SOHUM: ensure that BRANCH_EXTRN is defined as 1 in abstract_hardware_model.h
-    	tagged_branch_target_buffer_entry* match=m_shader_core_btb->find_btb_entry(prev_inst.is_branch_and_extrinsic(), (address_type) prev_inst.pc, target_pc);
-	int occ = inst.active_count();
-	match->update_occupancy(occ);
+	if (pI->get_opcode()==BRA_OP)
+	{
+	    //SOHUM: ensure that BRANCH_EXTRN is defined as 1 in abstract_hardware_model.h
+	    tagged_branch_target_buffer_entry* match=m_shader_core_btb->find_btb_entry(prev_inst.is_branch_and_extrinsic(), (address_type) prev_inst.pc, target_pc);
+	    int occ = inst.active_count();
+	    match->update_occupancy(occ);
+        }
+    }
+    else
+    {
+	assert (t0_tid == (unsigned (-1)));	// Checking that a null value of pI implies that none of the threads is active
+						// Not sure if that condition should arrive at all
     }
     if( inst.is_load() || inst.is_store() )	// Original code
         inst.generate_mem_accesses();
@@ -1978,7 +2000,7 @@ void shader_core_ctx::register_cta_thread_exit( unsigned cta_num )
 	  m_kernel->merge_btb(m_shader_core_btb);
 
 	  //printf("%9s, %12s, %12s, %12s\n", "WARP NO", "ACTIVE", "EXTRINSIC", "INTRINSIC");
-	  for (int i=0; i<m_config->max_warps_per_shader; i++)
+	  for (unsigned i=0; i<m_config->max_warps_per_shader; i++)
 	  {
 		m_kernel->merge_thread_status_table(m_simt_stack[i]->m_thread_status_table);
 		//printf("Warp %4d:", i);
