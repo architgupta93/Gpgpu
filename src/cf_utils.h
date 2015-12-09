@@ -83,6 +83,7 @@ public:
 	int get_instances() const{return instances;}
 	float get_taken_fraction() const;
 	float get_occupancy() const;
+	int get_dyn_inst_count() const;
 
 	// Modifying the current state of the BTB entry
 	void update_branch(bool& direction);

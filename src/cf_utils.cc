@@ -123,33 +123,56 @@ void add_label_ids(FileName& ptx_output_stream_fname, char* fname)
 	}
 	std::ifstream ptx_input_stream;
 	std::ofstream ptx_output_stream;
+	int extrinsic_count=0;
+	int intrinsic_count=0;
 	int label_id = 0;
+	int branch_count=0;
 	ptx_input_stream.open(fname, std::ios::in);
 	ptx_output_stream.open(ptx_output_stream_fname.name, std::ios::out);
 	const std::string extrn_tag="EXTRN:";
 	const std::string intrn_tag="INTRN:";
+	const std::string branch_tag="bra";
 	while (std::getline(ptx_input_stream, line))
 	{
 		if(line.find(extrn_tag) != std::string::npos)
 		{
 			ptx_output_stream << ("EXTRN" + boost::lexical_cast<std::string>(++label_id) + ":\n");;	
+			extrinsic_count++;
 		} 
 		else if (line.find(intrn_tag) != std::string::npos)
 		{
-
 			ptx_output_stream << ("INTRN" + boost::lexical_cast<std::string>(++label_id) + ":\n");;	
+			intrinsic_count++;
 		}
 		else
 		{
+			if(line.find(branch_tag) != std::string::npos)
+			{
+				branch_count++;
+			}
 			ptx_output_stream << line+"\n";
 		}
 	}	
 	ptx_input_stream.close();
 	ptx_output_stream.close();
+	printf("CF_UTILS: Static Branch stats\n");
+	assert(label_id==branch_count);	// Checking if the number of labels in the code is same as the number
+					// of branches. If that is not the case, we can have mismatched labels
+					// and tags (and need to redo the tagging)
+	printf("extrinsic: %d, intrinsic: %d\n", extrinsic_count, intrinsic_count);
 	return;
 }
 
 // Declaring functions for a BTB entry
+
+int tagged_branch_target_buffer_entry::get_dyn_inst_count() const
+{
+	int total_count = occupancy[0];
+	for(int i=1;i<WARP_SIZE+1;i++){
+		total_count += occupancy[i];
+	}
+	return total_count;
+}
 
 tagged_branch_target_buffer_entry::tagged_branch_target_buffer_entry(bool _tag,
 address_type _src, address_type _targ)
@@ -225,9 +248,9 @@ void tagged_branch_target_buffer_entry::print()
 	const char* int_desc = "intrinsic";
 	const char* ext_desc = "extrinsic";
 	if (tag==BRANCH_INTRN)
-		printf("%12x %12s %12x %10u %12f %15f\n", source, int_desc, target, instances, get_taken_fraction(), get_occupancy());
+		printf("%12x %12s %12x %10u %12f %15f %12d\n", source, int_desc, target, instances, get_taken_fraction(), get_occupancy(), get_dyn_inst_count());
 	else				
-		printf("%12x %12s %12x %10u %12f %15f\n", source, ext_desc, target, instances, get_taken_fraction(), get_occupancy());
+		printf("%12x %12s %12x %10u %12f %15f %12d\n", source, ext_desc, target, instances, get_taken_fraction(), get_occupancy(), get_dyn_inst_count());
 //	printf("%12x ", source);
 //	if(tag==BRANCH_INTRN) printf("intrinsic ");
 //	else printf("extrinsic ");
@@ -268,9 +291,9 @@ const bool& _tag, const address_type& _src, const address_type& _targ)	//SOHUM: 
 
 void tagged_branch_target_buffer::print()
 {
-	printf("----------------------------------------------------------------------------------------\n");
-	printf("%12s %12s %12s %10s %12s %15s\n", "PC", "TYPE", "TARGET", "INSTANCES", "TAKEN", "OCCUPANCY");
-	printf("----------------------------------------------------------------------------------------\n");
+	printf("------------------------------------------------------------------------------------------------\n");
+	printf("%12s %12s %12s %10s %12s %15s %12s\n", "PC", "TYPE", "TARGET", "INSTANCES", "TAKEN", "OCCUPANCY", "DYN_COUNT");
+	printf("------------------------------------------------------------------------------------------------\n");
 	std::vector<tagged_branch_target_buffer_entry*>:: iterator it;
 	for (it=btb.begin(); it != btb.end(); it++)
 	{
